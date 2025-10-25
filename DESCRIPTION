@@ -1,16 +1,22 @@
 Package: clustsimlR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Compute a Covariance-based Inter-cluster Similarity Metric
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Laeticia", "Liawas",
+      email = "laeticia.liawas@mail.utoronto.ca",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Provide functions for single-cell data clustering analysis, with
+    the use of within-cluster covariances to  characterise a cluster and to 
+    assess similarity or difference between clusters. Functions for data
+    preprocessing and dimensionality reduction, for clustering (by Gaussian 
+    Mixture Modelling) and for data visualisation are provided. This aims to 
+    provide the user with a simple interface to conduct single-cell clustering
+    analysis in a manner that takes into account the finer shape of the clusters
+    and how this shape differs between them.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
