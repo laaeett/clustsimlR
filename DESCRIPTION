@@ -18,6 +18,7 @@ Description: Provide functions for single-cell data clustering analysis, with
     analysis in a manner that takes into account the finer shape of the clusters
     and how this shape differs between them.
 License: MIT + file LICENSE
+Depends: R (>= 3.1.0)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
