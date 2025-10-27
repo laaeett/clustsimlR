@@ -9,7 +9,8 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Provide functions for single-cell data clustering analysis, with
+Maintainer: Laeticia Liawas <laeticia.liawas@mail.utoronto.ca>
+Description: Provides functions for single-cell data clustering analysis, with
     the use of within-cluster covariances to  characterise a cluster and to 
     assess similarity or difference between clusters. Functions for data
     preprocessing and dimensionality reduction, for clustering (by Gaussian 
@@ -19,7 +20,16 @@ Description: Provide functions for single-cell data clustering analysis, with
     and how this shape differs between them.
 License: MIT + file LICENSE
 Depends: R (>= 3.1.0)
+Imports: 
+    pheatmap,
+    mclust,
+    ggplot2,
+    readr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Suggests: 
+    testthat
+URL: https://github.com/laaeett/clustsimlR
+BugReports: https://github.com/laaeett/clustsimlR/issues
