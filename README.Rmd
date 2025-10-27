@@ -18,15 +18,28 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of clustsimlR is to ...
+Compute a Covariance-based Inter-cluster Similarity Metric
+
+## Description
+
+Provides functions for single-cell data clustering analysis, with
+the use of within-cluster covariances to  characterise a cluster and to 
+assess similarity or difference between clusters. Functions for data
+preprocessing and dimensionality reduction, for clustering (by Gaussian 
+Mixture Modelling) and for data visualisation are provided. This aims to 
+provide the user with a simple interface to conduct single-cell clustering
+analysis in a manner that takes into account the finer shape of the clusters
+and how this shape differs between them.
 
 ## Installation
 
 You can install the development version of clustsimlR from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-pak::pak("laaeett/clustsimlR")
+install.packages("devtools")
+library("devtools")
+devtools::install_github("laaeett/clustsimlR", build_vignettes = TRUE)
+library("clustsimlR")
 ```
 
 ## Example
