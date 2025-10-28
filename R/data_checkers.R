@@ -13,3 +13,11 @@ checkZeroInflation <- function(data,
 
     return(num_zeroes > exp_zeroes)
 }
+
+# check for missing data
+
+checkMissingData <- function(data) {
+
+    return(any(is.na(data)|is.nan(data)))
+
+}
