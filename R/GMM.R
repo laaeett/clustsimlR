@@ -1,13 +1,46 @@
 # Functions relating to GMM analysis
 
-plot_bic <- function(data,
-                     num_clust = 1:10) {
-    bic_values <- mclust::mclustBIC(data = data,
-                                    G = num_clust)
-    ggplot2::autoplot(bic_values) +
-        ggplot2::ggtitle("BIC values for GMM clusters") +
+# helper
+plot_bic <- function(gmm_clusters,
+                     num_clust = 1:10,
+                     color = "blue") {
+
+    bic <- gmm_clusters$bic
+    bic_plot <- ggplot2::geom_line(ggplot2::aes(x = num_clust,
+                                                y = bic),
+                                   color = color)
+    return(bic_plot)
+}
+
+# helper
+plot_icl <- function(gmm_clusters,
+                     num_clust = 1:10,
+                     color = "red") {
+
+    icl <- gmm_clusters$icl
+    icl_plot <- ggplot2::geom_line(ggplot2::aes(x = num_clust,
+                                                y = icl),
+                                   color = color)
+    return(icl_plot)
+}
+
+plot_loss <- function(data,
+                     num_clust = 1:10,
+                     colors = c("blue", "red")) {
+
+
+    gmm_clusters <- mclust::Mclust(data = data,
+                                   G = num_clust,
+                                   verbose = FALSE)
+
+    plt <- ggplot2::ggplot() +
+        plot_bic(gmm_clusters, num_clust, color[1])
+        plot_icl(gmm_clusters, num_clust, color[2])
+        ggplot2::ggtitle("BIC and ICL values for GMM clusters") +
         ggplot2::xlab("Number of clusters") +
-        ggplot2::ylab("BIC")
+        ggplot2::ylab("Value") +
+        ggplot2::legend("BIC" = color[1], "ICL" = color[2])
+
 }
 
 fit_GMM <- function(data,
@@ -30,5 +63,28 @@ fit_GMM <- function(data,
 }
 
 
+# function to plot TSNE coloured by cluster
+
+plot_GMM_clusters <- function(gmm_clustering,
+                              seed = NULL
+                              ) {
+    X <- gmm_clustering$data
+    tsne_data <- Rtsne(X, pca = FALSE)$Y
+    clusters <- gmm_clustering$classification
+    tsne_df <- data.frame(tsne1 = tsne_data[,1],
+                          tsne2 = tsne_data[,2],
+                          cluster = as.factor(clusters))
+
+    tsne_plot <- ggplot2::ggplot(tsne_df) +
+        ggplot2::geom_point(ggplot2::aes(x = tsne1,
+                                         y = tsne2,
+                                         color = cluster)) +
+        ggplot2::ggtitle("TSNE plot of GMM clusters") +
+        ggplot2::xlab("TSNE1") +
+        ggplot2::ylab("TSNE2") +
+        ggplot2::labs(color = "Cluster")
+
+    return(tsne_plot)
+}
 
 
