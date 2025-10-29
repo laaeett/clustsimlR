@@ -26,6 +26,7 @@ Imports:
     ggplot2,
     readr,
     Rtsne,
+    Hmisc
     viridis
 Encoding: UTF-8
 LazyData: true
