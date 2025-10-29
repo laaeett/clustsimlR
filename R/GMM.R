@@ -123,7 +123,9 @@ plot_GMM_clusters <- function(gmm_clustering,
         ggplot2::ggtitle("TSNE plot of GMM clusters") +
         ggplot2::xlab("TSNE1") +
         ggplot2::ylab("TSNE2") +
-        ggplot2::labs(color = "Cluster")
+        ggplot2::labs(color = "Cluster") +
+        viridis::scale_fill_viridis() +
+        ggplot2::theme_bw()
 
     return(tsne_plot)
 }
