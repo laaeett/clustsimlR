@@ -110,7 +110,7 @@ plot_GMM_clusters <- function(gmm_clustering,
                               seed = NULL
                               ) {
     X <- gmm_clustering$data
-    tsne_data <- Rtsne(X, pca = FALSE)$Y
+    tsne_data <- Rtsne::Rtsne(X, pca = FALSE)$Y
     clusters <- gmm_clustering$classification
     tsne_df <- data.frame(tsne1 = tsne_data[,1],
                           tsne2 = tsne_data[,2],
