@@ -3,17 +3,28 @@
 
 PCA <- function(data,
                 scree_plot = TRUE,
-                pc_heatmap = TRUE) {
+                pc_heatmap = TRUE,
+                check_zero = TRUE,
+                overall_zero_threshold = 0.5,
+                cell_zero_threshold = 0.5,
+                gene_zero_threshold = 0.5,
+                clean_zero = TRUE,
+                clean_NA = TRUE,
+                copy = FALSE) {
 
-    if(checkZeroInflation(data)) {
-        message("Data appears to be zero-inflated.\n")
-        message("Please interpret results with this in mind.\n")
-    }
-
-    if(checkMissingData(data)) {
-        message("Data contains missing values or NaN values.\n")
-        stop("Please impute or remove missing data before proceeding.\n")
-    }
+    # check for missing data and zeroes(if user wants)
+    # stops if found missing data but not fixed
+    tryCatch(checkEverything(data,
+                             check_zero,
+                             overall_zero_threshold,
+                             cell_zero_threshold,
+                             gene_zero_threshold,
+                             clean_zero,
+                             clean_NA,
+                             copy),
+             error = function(e) {
+                 stop("Stopping function due to unhandled missing data.\n")
+             })
 
     pca_data <- stats::princomp(x = data, scores = scores)
 
