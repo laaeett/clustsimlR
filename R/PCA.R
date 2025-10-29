@@ -43,8 +43,8 @@ plot_PC <- function(pca_data,
                     pcj = 2) {
     pc_scores <- as.data.frame(pca_data$scores)
     ggplot2::ggplot(pc_scores) +
-    ggplot2::geom_point(ggplot2::aes_string(x = sprintf("Comp. %d", pci),
-                                            y = sprintf("Comp. %d", pcj))) +
+    ggplot2::geom_point(ggplot2::aes_string(x = sprintf("PC%d", pci),
+                                            y = sprintf("PC%d", pcj))) +
     ggplot2::xlab(sprintf("PC%d", pci)) +
     ggplot2::ylab(sprintf("PC%d", pcj)) +
     ggplot2::ggtitle(sprintf("Scatter plot of PC%d vs. PC%d", pci, pcj))
