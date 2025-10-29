@@ -19,19 +19,22 @@ Description: Provides functions for single-cell data clustering analysis, with
     analysis in a manner that takes into account the finer shape of the clusters
     and how this shape differs between them.
 License: MIT + file LICENSE
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.2.0)
 Imports: 
     pheatmap,
     mclust,
     ggplot2,
     readr,
-    Rtsne
+    Rtsne,
+    viridis
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
     testthat,
-    rmarkdown
+    rmarkdown,
+    tidyr,
+    DescTools
 URL: https://github.com/laaeett/clustsimlR
 BugReports: https://github.com/laaeett/clustsimlR/issues
