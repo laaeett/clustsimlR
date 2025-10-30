@@ -20,20 +20,24 @@ A boolean value representing whether the proportion of zeroes in the
 data is greater than the chosen threshold.
 }
 \description{
-Check for possible zero-inflation in the data
+Checks data for possible zero-inflation by comparing the number of zero
+values in the data to a threshold (default= 0.5), for which
+the data is considered zero-inflated if the number of zero values observed
+in the data exceeds the expected number as computed from the threshold.
 }
 \examples{
+\dontrun{
 # load dasatinib dataset
-df <- dasatinib()
-# first and last few rows of the dataset
-head(df)
-tail(df)
+data(dasatinib)
+df <- dasatinib
+
 # check for zero-inflation with default threshold of 0.5
 checkZeroInflation(df)
 
-# change 60\% of the data to zero
-df_zero_inflated <- df
-df_zero_inflated[1:((nrow(df) * ncol(df) / 3) * 2)] <- 0
+# change some of the data to zero
+df_zero_inflated <- data.frame(df)
+df_zero_inflated[, 2:4] <- 0
 checkZeroInflation(df_zero_inflated)
+}
 
 }
