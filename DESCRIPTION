@@ -24,10 +24,11 @@ Imports:
     pheatmap,
     mclust,
     ggplot2,
-    readr,
     Rtsne,
     Hmisc,
-    viridis
+    viridis,
+    dplyr,
+    magrittr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -36,6 +37,7 @@ Suggests:
     testthat,
     rmarkdown,
     tidyr,
-    DescTools
+    DescTools,
+    readr
 URL: https://github.com/laaeett/clustsimlR
 BugReports: https://github.com/laaeett/clustsimlR/issues
