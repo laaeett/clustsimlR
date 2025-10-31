@@ -14,11 +14,12 @@
 #'  numeric i.e. if a data frame has non-numeric columns, they must be
 #'  removed first.
 #' @param scree_plot A boolean indicating whether to generate a scree plot.
-#' Default is TRUE.
+#'  Default is TRUE.
 #' @param pc_heatmap A boolean indicating whether to generate a heatmap of the
-#' principal components and weights of original features. Default is TRUE.
+#'  principal components and weights of original features. Default is TRUE.
+#'  Legend indicated the magnitude of each coefficient.
 #' @returns A list of class `princomp` containing the results of the PCA.
-#' The components of the list are as described in \code{?stats::princomp}.
+#'  The components of the list are as described in \code{?stats::princomp}.
 #'
 #' @examples
 #' # load dasatinib dataset
@@ -74,10 +75,15 @@ PCA <- function(data,
     pca_data <- stats::princomp(x = data, scores = TRUE)
 
     if(scree_plot) {
-        stats::screeplot(x = pca_data)
+        stats::screeplot(x = pca_data,
+                         type = "lines",
+                         main = "Scree plot of explained variance per PC")
     }
     if(pc_heatmap) {
-        pheatmap::pheatmap(pca_data$loadings)
+        pheatmap::pheatmap(pca_data$loadings,
+                           cluster_rows = FALSE,
+                           cluster_cols = FALSE,
+                           angle_col = 45)
     }
     return(pca_data)
 }
@@ -96,7 +102,7 @@ PCA <- function(data,
 #' y-axis. Default value is 2, i.e. PC2 as the y-axis.
 #'
 #' @returns A ggplot2 scatter plot of of the data in the space defined by
-#' two principal componentsm PCi and PCj.
+#' two principal components PCi and PCj.
 #'
 #' @examples
 #' # load dasatinib dataset
@@ -110,11 +116,12 @@ PCA <- function(data,
 #' # Plot data in PC1 vs PC2 space
 #' plot_PC(pca_results)
 #'
+#' @importFrom ggplot2 ggplot geom_point aes xlab ylab ggtitle
+#'
 #' @references
 #' Jolliffe, I. T. (2002). \emph{Principal Component Analysis}, 2nd Edition,
 #' New York: Springer.
 #'
-#' @importFrom ggplot2 ggplot geom_point aes_string xlab ylab ggtitle
 #' @export
 #'
 plot_PC <- function(pca_data,
@@ -142,9 +149,11 @@ plot_PC <- function(pca_data,
     }
 
     pc_scores <- as.data.frame(pca_data$scores)
+    xcol <- sprintf("Comp.%d", pci)
+    ycol <- sprintf("Comp.%d", pcj)
     ggplot2::ggplot(pc_scores) +
-    ggplot2::geom_point(ggplot2::aes_string(x = sprintf("PC%d", pci),
-                                            y = sprintf("PC%d", pcj))) +
+    ggplot2::geom_point(ggplot2::aes(x = .data[[xcol]],
+                                     y = .data[[ycol]])) +
     ggplot2::xlab(sprintf("PC%d", pci)) +
     ggplot2::ylab(sprintf("PC%d", pcj)) +
     ggplot2::ggtitle(sprintf("Scatter plot of PC%d vs. PC%d", pci, pcj))

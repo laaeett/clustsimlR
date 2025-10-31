@@ -19,7 +19,7 @@ y-axis. Default value is 2, i.e. PC2 as the y-axis.}
 }
 \value{
 A ggplot2 scatter plot of of the data in the space defined by
-two principal componentsm PCi and PCj.
+two principal components PCi and PCj.
 }
 \description{
 Plot the scores of the data in the space defined by two principal components

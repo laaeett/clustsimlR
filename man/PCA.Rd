@@ -27,7 +27,8 @@ removed first.}
 Default is TRUE.}
 
 \item{pc_heatmap}{A boolean indicating whether to generate a heatmap of the
-principal components and weights of original features. Default is TRUE.}
+principal components and weights of original features. Default is TRUE.
+Legend indicated the magnitude of each coefficient.}
 
 \item{check_zero}{A boolean indicating whether to check for zero-inflation.
 Default is TRUE.}
