@@ -6,8 +6,8 @@ test_that("stops when missing data not handled", {
     missing_data_NA <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, NA, 9))
     missing_data_NaN <- data.frame(c(1, 2, 3), c(4, NaN, 6), c(7, 8, 9))
 
-    testthat::expect_error(fit_GMM(missing_data_NA))
-    testthat::expect_error(fit_GMM(missing_data_NaN))
+    testthat::expect_error(fit_GMM(missing_data_NA, clean_NA = FALSE))
+    testthat::expect_error(fit_GMM(missing_data_NaN, clean_NA = FALSE))
 
 })
 
