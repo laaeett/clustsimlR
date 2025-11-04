@@ -4,12 +4,7 @@
 \alias{cleanZeroInflation}
 \title{Clean zero-inflated genes and cells from the data}
 \usage{
-cleanZeroInflation(
-  data,
-  cell_zero_threshold = 0.5,
-  gene_zero_threshold = 0.5,
-  copy = FALSE
-)
+cleanZeroInflation(data, cell_zero_threshold = 0.5, gene_zero_threshold = 0.5)
 }
 \arguments{
 \item{data}{A data frame where each column represents a gene and each row
@@ -24,19 +19,16 @@ cell zero-inflated if over half of it are zeroes.}
 the data for a single gene (column) that can be zero before being considered
 zero-inflated. Default is 0.5, indicating that we consider the data for that
 gene zero-inflated if over half of it are zeroes.}
-
-\item{copy}{A boolean value indicating whether to work on a copy of the data.
-Default is FALSE.}
 }
 \value{
-A 'cleaned' version of data, where zero-inflated columns and rows are
-removed. If copy is TRUE, returns a copy of
-data but cleaned.
+A 'cleaned' version of data, where zero-inflated columns and rows
+are removed.
 }
 \description{
 Cleans the data by removing zero-inflated genes (columns) and zero-inflated
 cells (rows). A gene or cell is considered zero-inflated if the number of
 zero values exceeds the number of zero values expected based on a threshold.
+This function ignores NA or NaN values.
 }
 \examples{
 \dontrun{
@@ -49,7 +41,7 @@ df_zero_inflated <- data.frame(df)
 df_zero_inflated[,2:4] <- 0
 checkZeroInflation(df_zero_inflated)
 
-df_cleaned <- cleanZeroInflation(df_zero_inflated, copy = TRUE)
+df_cleaned <- cleanZeroInflation(df_zero_inflated)
 checkZeroInflation(df_cleaned)
 }
 

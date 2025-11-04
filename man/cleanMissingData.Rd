@@ -4,17 +4,14 @@
 \alias{cleanMissingData}
 \title{Clean NA or NaN values}
 \usage{
-cleanMissingData(data, copy = FALSE)
+cleanMissingData(data)
 }
 \arguments{
 \item{data}{A data frame where each column represents a gene and each row
 represents a single cell.}
-
-\item{copy}{A boolean indicating whether to work on a copy of the data.}
 }
 \value{
 A 'cleaned' version of the data, with imputed NA and NaN values.
-If copy is TRUE, returns a copy of data but cleaned. Default is FALSE.
 }
 \description{
 Cleans the data by imputing NA and NaN values in data using the mean
@@ -38,7 +35,7 @@ checkMissingData(df_NA_cleaned)
 #change one of the values to NaN
 df_one_NaN <- data.frame(df)
 df_one_NaN[1,2] <- 1/0
-df_NaN_cleaned <- cleanMissingData(df_one_NaN, copy = TRUE)
+df_NaN_cleaned <- cleanMissingData(df_one_NaN)
 checkMissingData(df_NaN_cleaned)
 checkMissingData(df_one_NaN)
 }

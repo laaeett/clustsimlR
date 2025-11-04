@@ -4,7 +4,7 @@
 \alias{plot_GMM_clusters}
 \title{Plot a t-SNE visualisation for GMM clusters}
 \usage{
-plot_GMM_clusters(gmm_clustering, seed = NULL)
+plot_GMM_clusters(gmm_clustering, seed = NULL, size = 5)
 }
 \arguments{
 \item{gmm_clustering}{An object of class \code{Mclust}, as outputted by
@@ -13,10 +13,16 @@ in \code{?mclust::Mclust}.}
 
 \item{seed}{An integer value for the seed to be used for random number
 generation. Default is NULL, which means that no seed is set and initial
-embedding points for t-SNE are selected at random.}
+embedding points for t-SNE are selected at random. As a result, if not set,
+two different t-SNE plots of the same data and same hyperparameters may not
+look the same.}
+
+\item{size}{An integer value denoting the size of the points for the t-SNE
+plot, in millimeters. Default is 5. For more information see
+\code{?ggplot2::size}.}
 }
 \value{
-Returns the data as a t-SNE plot in two dimensions, coloured based on
+Returns a t-SNE plot in two dimensions, coloured based on
 cluster membership.
 }
 \description{

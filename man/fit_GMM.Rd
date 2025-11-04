@@ -6,7 +6,7 @@
 \usage{
 fit_GMM(
   data,
-  num_clust = 5,
+  num_clust = NULL,
   seed = NULL,
   modelNames = NULL,
   inform_progress = TRUE,
@@ -15,8 +15,7 @@ fit_GMM(
   cell_zero_threshold = 0.5,
   gene_zero_threshold = 0.5,
   clean_zero = TRUE,
-  clean_NA = TRUE,
-  copy = FALSE
+  clean_NA = TRUE
 )
 }
 \arguments{
@@ -26,8 +25,8 @@ numeric i.e. if a data frame has non-numeric columns, they must be
 removed first.}
 
 \item{num_clust}{An integer indicating the numbers of clusters used for GMM
-fitting. Default is 5, indicating that GMM will be conducted for 5
-clusters.}
+fitting. If NULL, will use the number of features divided by 2. Default is
+NULL.}
 
 \item{seed}{An integer value for the seed to be used for random number
 generation. Default is NULL, which means that no seed is set and initial
@@ -39,11 +38,11 @@ Default is NULL, which uses all available models that are suitable for the
 data. See \code{?mclust::mclustBIC}, \code{?mclust::mclustICL} or
 \code{?mclust::Mclust} for more details.}
 
-\item{inform_progress}{A boolean indicating whether to report progress
+\item{inform_progress}{A logical indicating whether to report progress
 of GMM fitting while the function is running. Default is TRUE for
 interactive sessions, and FALSE otherwise.}
 
-\item{check_zero}{A boolean indicating whether to check for zero-inflation.
+\item{check_zero}{A logical indicating whether to check for zero-inflation.
 Default is TRUE.}
 
 \item{overall_zero_threshold}{A double representing the maximum proportion of
@@ -61,15 +60,12 @@ the data for a single gene (column) that can be zero before being considered
 zero-inflated. Default is 0.5, indicating that we consider the data for that
 gene zero-inflated if over half of it are zeroes.}
 
-\item{clean_zero}{A boolean indicating whether to remove zero-inflated genes.
+\item{clean_zero}{A logical indicating whether to remove zero-inflated genes.
 and cells. Default is TRUE.}
 
-\item{clean_NA}{A boolean indicating whether to impute missing values.
+\item{clean_NA}{A logical indicating whether to impute missing values.
 Default is TRUE. This can be changed to FALSE if the user wishes to handle
 missing values on their own.}
-
-\item{copy}{A boolean value indicating whether to work on a copy of the data.
-Default is FALSE.}
 }
 \value{
 The results of GMM clustering, as an object of class \code{Mclust}. If

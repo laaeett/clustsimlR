@@ -16,14 +16,15 @@ the data that can be zero before being considered zero-inflated. Default is
 are zeroes.}
 }
 \value{
-A boolean value representing whether the proportion of zeroes in the
+A logical value representing whether the proportion of zeroes in the
 data is greater than the chosen threshold.
 }
 \description{
 Checks data for possible zero-inflation by comparing the number of zero
 values in the data to a threshold (default= 0.5), for which
 the data is considered zero-inflated if the number of zero values observed
-in the data exceeds the expected number as computed from the threshold.
+in the data exceeds the expected number as computed from the threshold. This
+function ignores NA or NaN values.
 }
 \examples{
 \dontrun{

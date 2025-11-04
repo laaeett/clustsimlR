@@ -16,8 +16,8 @@
 #'  numeric i.e. if a data frame has non-numeric columns, they must be
 #'  removed first.
 #' @param num_clust An integer indicating the numbers of clusters used for GMM
-#'  fitting. Default is 5, indicating that GMM will be conducted for 5
-#'  clusters.
+#'  fitting. If NULL, will use the number of features divided by 2. Default is
+#'  NULL.
 #' @param seed An integer value for the seed to be used for random number
 #'  generation. Default is NULL, which means that no seed is set and initial
 #'  centroids are selected at random.
@@ -26,7 +26,7 @@
 #'  Default is NULL, which uses all available models that are suitable for the
 #'  data. See \code{?mclust::mclustBIC}, \code{?mclust::mclustICL} or
 #'  \code{?mclust::Mclust} for more details.
-#' @param inform_progress A boolean indicating whether to report progress
+#' @param inform_progress A logical indicating whether to report progress
 #'  of GMM fitting while the function is running. Default is TRUE for
 #'  interactive sessions, and FALSE otherwise.
 #' @inheritParams checkEverything
@@ -63,7 +63,7 @@
 #' @export
 #'
 fit_GMM <- function(data,
-                    num_clust = 5,
+                    num_clust = NULL,
                     seed = NULL,
                     modelNames = NULL,
                     inform_progress = TRUE,
@@ -72,8 +72,7 @@ fit_GMM <- function(data,
                     cell_zero_threshold = 0.5,
                     gene_zero_threshold = 0.5,
                     clean_zero = TRUE,
-                    clean_NA = TRUE,
-                    copy = FALSE) {
+                    clean_NA = TRUE) {
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
@@ -83,8 +82,7 @@ fit_GMM <- function(data,
                              cell_zero_threshold,
                              gene_zero_threshold,
                              clean_zero,
-                             clean_NA,
-                             copy),
+                             clean_NA),
              error = function(e) {
                  stop("Stopping function due to unhandled missing data.\n")
              })
@@ -99,8 +97,12 @@ fit_GMM <- function(data,
         set.seed(seed)
     }
 
+    if(is.null(num_clust)) {
+        num_clust <- ncol(data) / 2
+    }
+
     gmm_clustering <- mclust::Mclust(data = data,
-                                     G = num_clust:num_clust,
+                                     G = num_clust,
                                      modelNames = modelNames,
                                      verbose = inform_progress)
 
@@ -113,7 +115,7 @@ fit_GMM <- function(data,
 #'  models
 #'
 #' Plot the BIC value (Bayesian Information Criterion) the ICL value (Integrated
-#'  Complete-data Likelihood)for different numbers of clusters, and different
+#'  Complete-data Likelihood) for different numbers of clusters, and different
 #'  models used in Gaussian Mixture Modelling (GMM). These values can be used as
 #'  a regularised loss function for determining the optimal number of clusters
 #'  and optimal model for GMM fitting. User can choose to plot either value,
@@ -128,9 +130,9 @@ fit_GMM <- function(data,
 #' @param num_clust A vector indicating the numbers of clusters used for the GMM
 #'  fitting. Default is 1:10, indicating that GMM will be conducted for 1 to 10
 #'  clusters.
-#' @param plot_bic A boolean indicating whether to plot BIC values. Default is
+#' @param plot_bic A logical indicating whether to plot BIC values. Default is
 #' TRUE.
-#' @param plot_icl A boolean indicating whether to plot ICL values. Default is
+#' @param plot_icl A logical indicating whether to plot ICL values. Default is
 #' TRUE.
 #' @returns Returns NULL. Generates BIC and/or ICL plots as specified by user.
 #'
@@ -160,6 +162,8 @@ fit_GMM <- function(data,
 #' Jolliffe, I. T. (2002). \emph{Principal Component Analysis}, 2nd Edition,
 #' New York: Springer.
 #'
+#' #TODO: add central lim theorem ref
+#'
 #' @export
 #'
 plot_loss <- function(data,
@@ -174,8 +178,7 @@ plot_loss <- function(data,
                      cell_zero_threshold = 0.5,
                      gene_zero_threshold = 0.5,
                      clean_zero = TRUE,
-                     clean_NA = TRUE,
-                     copy = FALSE) {
+                     clean_NA = TRUE) {
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
@@ -185,8 +188,7 @@ plot_loss <- function(data,
                              cell_zero_threshold,
                              gene_zero_threshold,
                              clean_zero,
-                             clean_NA,
-                             copy),
+                             clean_NA),
              error = function(e) {
                  stop("Stopping function due to unhandled missing data.\n")
              })
@@ -196,9 +198,9 @@ plot_loss <- function(data,
              of the data frame with only numeric values.\n")
     }
 
-    # won't break the function, but renders it useless if both are FALSE
+    # won't break the function, but really just renders it useless if both FALSE
     if(!(plot_bic || plot_icl)) {
-        message("At least one of plot_bic or plot_icl must be TRUE.\n")
+        message("At least one of plot_bic or plot_icl should be TRUE.\n")
         return()
     }
 
@@ -216,13 +218,12 @@ plot_loss <- function(data,
     }
 
     if(plot_icl) {
-        icl <- mclust::mclustICL(data = data,
+        icl <- mclust::mclustICL(data,
                                  G = num_clust,
                                  modelNames = modelNames,
                                  verbose = inform_progress)
         plot(icl)
     }
-    return()
 }
 
 #' Plot a t-SNE visualisation for GMM clusters
@@ -234,8 +235,13 @@ plot_loss <- function(data,
 #'  in \code{?mclust::Mclust}.
 #' @param seed An integer value for the seed to be used for random number
 #'  generation. Default is NULL, which means that no seed is set and initial
-#'  embedding points for t-SNE are selected at random.
-#' @returns Returns the data as a t-SNE plot in two dimensions, coloured based on
+#'  embedding points for t-SNE are selected at random. As a result, if not set,
+#'  two different t-SNE plots of the same data and same hyperparameters may not
+#'  look the same.
+#' @param size An integer value denoting the size of the points for the t-SNE
+#'  plot, in millimeters. Default is 5. For more information see
+#'  \code{?ggplot2::size}.
+#' @returns Returns a t-SNE plot in two dimensions, coloured based on
 #'  cluster membership.
 #' @importFrom Rtsne Rtsne
 #' @importFrom ggplot2 ggplot geom_point aes ggtitle xlab ylab labs theme_bw
@@ -264,23 +270,30 @@ plot_loss <- function(data,
 #' @export
 #'
 plot_GMM_clusters <- function(gmm_clustering,
-                              seed = NULL) {
+                              seed = NULL,
+                              size = 5) {
+
+    if(!(is.null(seed))){
+        set.seed(seed)
+    }
+
     X <- gmm_clustering$data
     tsne_data <- Rtsne::Rtsne(X, pca = FALSE)$Y
     clusters <- gmm_clustering$classification
     tsne_df <- data.frame(tsne1 = tsne_data[,1],
                           tsne2 = tsne_data[,2],
-                          cluster = as.factor(clusters))
+                          cluster = clusters)
 
     tsne_plot <- ggplot2::ggplot(tsne_df) +
-        ggplot2::geom_point(ggplot2::aes(x = tsne1,
+        ggplot2::geom_point(size = size, ggplot2::aes(x = tsne1,
                                          y = tsne2,
-                                         color = cluster)) +
+                                         color = as.factor(cluster)),
+                            ) +
         ggplot2::ggtitle("TSNE plot of GMM clusters") +
         ggplot2::xlab("TSNE1") +
         ggplot2::ylab("TSNE2") +
         ggplot2::labs(color = "Cluster") +
-        viridis::scale_fill_viridis() +
+        viridis::scale_color_viridis(discrete = TRUE) +
         ggplot2::theme_bw()
 
     return(tsne_plot)

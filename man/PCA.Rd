@@ -13,8 +13,7 @@ PCA(
   cell_zero_threshold = 0.5,
   gene_zero_threshold = 0.5,
   clean_zero = TRUE,
-  clean_NA = TRUE,
-  copy = FALSE
+  clean_NA = TRUE
 )
 }
 \arguments{
@@ -30,7 +29,7 @@ Default is TRUE.}
 principal components and weights of original features. Default is TRUE.
 Legend indicated the magnitude of each coefficient.}
 
-\item{check_zero}{A boolean indicating whether to check for zero-inflation.
+\item{check_zero}{A logical indicating whether to check for zero-inflation.
 Default is TRUE.}
 
 \item{overall_zero_threshold}{A double representing the maximum proportion of
@@ -48,15 +47,12 @@ the data for a single gene (column) that can be zero before being considered
 zero-inflated. Default is 0.5, indicating that we consider the data for that
 gene zero-inflated if over half of it are zeroes.}
 
-\item{clean_zero}{A boolean indicating whether to remove zero-inflated genes.
+\item{clean_zero}{A logical indicating whether to remove zero-inflated genes.
 and cells. Default is TRUE.}
 
-\item{clean_NA}{A boolean indicating whether to impute missing values.
+\item{clean_NA}{A logical indicating whether to impute missing values.
 Default is TRUE. This can be changed to FALSE if the user wishes to handle
 missing values on their own.}
-
-\item{copy}{A boolean value indicating whether to work on a copy of the data.
-Default is FALSE.}
 }
 \value{
 A list of class \code{princomp} containing the results of the PCA.

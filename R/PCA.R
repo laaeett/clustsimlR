@@ -50,8 +50,7 @@ PCA <- function(data,
                 cell_zero_threshold = 0.5,
                 gene_zero_threshold = 0.5,
                 clean_zero = TRUE,
-                clean_NA = TRUE,
-                copy = FALSE) {
+                clean_NA = TRUE) {
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
@@ -61,8 +60,7 @@ PCA <- function(data,
                              cell_zero_threshold,
                              gene_zero_threshold,
                              clean_zero,
-                             clean_NA,
-                             copy),
+                             clean_NA),
              error = function(e) {
                  stop("Stopping function due to unhandled missing data.\n")
              })

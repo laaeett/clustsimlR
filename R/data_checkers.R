@@ -5,7 +5,8 @@
 #' Checks data for possible zero-inflation by comparing the number of zero
 #'  values in the data to a threshold (default= 0.5), for which
 #'  the data is considered zero-inflated if the number of zero values observed
-#'  in the data exceeds the expected number as computed from the threshold.
+#'  in the data exceeds the expected number as computed from the threshold. This
+#'  function ignores NA or NaN values.
 #'
 #' @param data A data frame where each column represents a gene and each row
 #'  represents a single cell.
@@ -13,7 +14,7 @@
 #'  the data that can be zero before being considered zero-inflated. Default is
 #'  0.5, indicating that we consider the data zero-inflated if over half of it
 #'  are zeroes.
-#' @returns A boolean value representing whether the proportion of zeroes in the
+#' @returns A logical value representing whether the proportion of zeroes in the
 #'  data is greater than the chosen threshold.
 #'
 #' @examples
@@ -44,7 +45,7 @@ checkZeroInflation <- function(data,
     exp_zeroes <- num_vals * overall_zero_threshold
 
     # observed number of zeroes
-    num_zeroes <- sum(data == 0)
+    num_zeroes <- sum(data == 0, na.rm = TRUE)
 
     return(num_zeroes > exp_zeroes)
 }
@@ -55,6 +56,7 @@ checkZeroInflation <- function(data,
 #' Cleans the data by removing zero-inflated genes (columns) and zero-inflated
 #'  cells (rows). A gene or cell is considered zero-inflated if the number of
 #'  zero values exceeds the number of zero values expected based on a threshold.
+#'  This function ignores NA or NaN values.
 #'
 #' @param data A data frame where each column represents a gene and each row
 #'  represents a single cell.
@@ -66,12 +68,9 @@ checkZeroInflation <- function(data,
 #'  the data for a single gene (column) that can be zero before being considered
 #'  zero-inflated. Default is 0.5, indicating that we consider the data for that
 #'  gene zero-inflated if over half of it are zeroes.
-#' @param copy A boolean value indicating whether to work on a copy of the data.
-#'  Default is FALSE.
 #'
-#' @returns A 'cleaned' version of data, where zero-inflated columns and rows are
-#'  removed. If copy is TRUE, returns a copy of
-#'  data but cleaned.
+#' @returns A 'cleaned' version of data, where zero-inflated columns and rows
+#'  are removed.
 #'
 #' @examples
 #' \dontrun{
@@ -84,20 +83,13 @@ checkZeroInflation <- function(data,
 #' df_zero_inflated[,2:4] <- 0
 #' checkZeroInflation(df_zero_inflated)
 #'
-#' df_cleaned <- cleanZeroInflation(df_zero_inflated, copy = TRUE)
+#' df_cleaned <- cleanZeroInflation(df_zero_inflated)
 #' checkZeroInflation(df_cleaned)
 #' }
 #'
 cleanZeroInflation <- function(data,
                                cell_zero_threshold = 0.5,
-                               gene_zero_threshold = 0.5,
-                               copy = FALSE) {
-
-    data_copy <- data
-    # if TRUE, work on a copy of the data frame
-    if(copy) {
-        data_copy <- data.frame(data)
-    }
+                               gene_zero_threshold = 0.5) {
 
     if(cell_zero_threshold > 1 || cell_zero_threshold < 0) {
         stop("cell_zero_threshold must be between 0 and 1.")
@@ -109,36 +101,38 @@ cleanZeroInflation <- function(data,
 
     # check column-wise = gene
     rm_genes <- c()
-    for (i in 1:ncol(data_copy)) {
-        curr_gene <- data_copy[, i]
+    for (i in 1:ncol(data)) {
+        curr_gene <- data[, i]
         exp_zeroes <- length(curr_gene) * gene_zero_threshold
-        num_zeroes <- sum(curr_gene == 0)
+        num_zeroes <- sum(curr_gene == 0, na.rm = TRUE)
 
         # mark for removal if no. of zeroes exceeds threshold
         if(num_zeroes > exp_zeroes) {
-            rm_genes <- c(rm_genes, colnames(data_copy)[i])
+            rm_genes <- c(rm_genes, colnames(data)[i])
         }
     }
-    data_copy <- data_copy[, !(colnames(data_copy) %in% rm_genes)]
+    data <- data[, !(colnames(data) %in% rm_genes), drop = FALSE]
 
     # if all genes were removed
-    if(ncol(data_copy) == 0) {
+    if(ncol(data) == 0) {
         stop("All genes were removed by zero-inflation filtering\n")
     }
 
     # check row-wise = cell
     rm_cells <- c()
-    for (i in 1:nrow(data_copy)) {
-        curr_cell <- data_copy[i, ]
+    for (i in 1:nrow(data)) {
+        curr_cell <- data[i, ]
         exp_zeroes <- length(curr_cell) * cell_zero_threshold
-        num_zeroes <- sum(curr_cell == 0)
+        num_zeroes <- sum(curr_cell == 0, na.rm = TRUE)
 
         #mark for removal if no. of zeroes exceed threshold
         if(num_zeroes > exp_zeroes) {
             rm_cells <- c(rm_cells, i)
         }
     }
-    data_copy <- data_copy[!(data_copy[, 1] %in% rm_cells), ]
+    if(length(rm_cells) > 0){
+        data <- data[-rm_cells, , drop = FALSE]
+    }
 
     # inform what was removed
     message(sprintf("Removed %d zero-inflated genes: %s\n",
@@ -148,9 +142,7 @@ cleanZeroInflation <- function(data,
                     length(rm_cells),
                     paste(rm_cells, collapse = ", ")))
 
-    # if copy, return a diff mem. address
-    # else, should return mem. address of the original df
-    return(data_copy)
+    return(data)
 }
 
 
@@ -161,9 +153,8 @@ cleanZeroInflation <- function(data,
 #'
 #' @param data A data frame where each column represents a gene and each row
 #'  represents a single cell.
-#' @param copy A boolean indicating whether to work on a copy of the data.
 #' @returns A 'cleaned' version of the data, with imputed NA and NaN values.
-#'  If copy is TRUE, returns a copy of data but cleaned. Default is FALSE.
+#'
 #' @examples
 #' \dontrun{
 #' # load dasatinib dataset
@@ -182,7 +173,7 @@ cleanZeroInflation <- function(data,
 #' #change one of the values to NaN
 #' df_one_NaN <- data.frame(df)
 #' df_one_NaN[1,2] <- 1/0
-#' df_NaN_cleaned <- cleanMissingData(df_one_NaN, copy = TRUE)
+#' df_NaN_cleaned <- cleanMissingData(df_one_NaN)
 #' checkMissingData(df_NaN_cleaned)
 #' checkMissingData(df_one_NaN)
 #' }
@@ -190,23 +181,21 @@ cleanZeroInflation <- function(data,
 #' @importFrom dplyr mutate_all
 #' @importFrom magrittr %>%
 #'
-cleanMissingData <- function(data,
-                             copy = FALSE) {
-    data_copy <- data
-    if(copy) {
-        data_copy <- data.frame(data)
-    }
+cleanMissingData <- function(data) {
 
     # changing NaN to NA for imputation
-    data_copy <- data_copy %>% dplyr::mutate_all(~ifelse(is.nan(.), NA, .))
+    data <- data %>% dplyr::mutate_all(~ifelse(is.nan(.), NA, .))
 
     # imputation based on column
-    for(i in 1:ncol(data_copy)) {
+    for(i in 1:ncol(data)) {
         # imputation from mean
-        data_copy[, i] <- Hmisc::impute(data_copy[, i], fun = mean)
+        data[, i] <- Hmisc::impute(data[, i], fun = mean)
+
+        # any remaining values, force into 0
+        data[, i] <- Hmisc::impute(data[, i], fun = c(0))
     }
 
-    return(data_copy)
+    return(data)
 }
 
 
@@ -226,11 +215,11 @@ cleanMissingData <- function(data,
 #' @inheritParams cleanZeroInflation
 #' @inheritParams checkMissingData
 #' @inheritParams cleanMissingData
-#' @param check_zero A boolean indicating whether to check for zero-inflation.
+#' @param check_zero A logical indicating whether to check for zero-inflation.
 #' Default is TRUE.
-#' @param clean_zero A boolean indicating whether to remove zero-inflated genes.
+#' @param clean_zero A logical indicating whether to remove zero-inflated genes.
 #' and cells. Default is TRUE.
-#' @param clean_NA A boolean indicating whether to impute missing values.
+#' @param clean_NA A logical indicating whether to impute missing values.
 #' Default is TRUE. This can be changed to FALSE if the user wishes to handle
 #' missing values on their own.
 #'
@@ -267,14 +256,13 @@ checkEverything <- function(data,
                             cell_zero_threshold = 0.5,
                             gene_zero_threshold = 0.5,
                             clean_zero = TRUE,
-                            clean_NA = TRUE,
-                            copy = FALSE) {
+                            clean_NA = TRUE) {
 
     if(anyNA(data)) {
         message("Data contains missing values or NaN values.\n")
 
         if(clean_NA) {
-            data <- cleanMissingData(data, copy)
+            data <- cleanMissingData(data)
             message("Missing/NaN values imputed from mean gene expression.\n")
         }
 
@@ -290,15 +278,14 @@ checkEverything <- function(data,
         if(clean_zero){
             data <- cleanZeroInflation(data,
                                        cell_zero_threshold,
-                                       gene_zero_threshold,
-                                       copy)
+                                       gene_zero_threshold)
             message("Zero-inflated genes/cells removed.\n")
         }
 
         # user chooses not to remove zero-inflated rows/columns
         # warn but run
         else {
-            message(
+            warning(
             "Consider running cleanZeroInflation(data) before proceeding.\n")
         }
     }
