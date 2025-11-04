@@ -245,7 +245,7 @@ plot_loss <- function(data,
 #'  cluster membership.
 #' @importFrom Rtsne Rtsne
 #' @importFrom ggplot2 ggplot geom_point aes ggtitle xlab ylab labs theme_bw
-#' @importFrom viridis scale_fill_viridis
+#'  scale_fill_viridis_d
 #'
 #' @examples
 #' # load dasatinib dataset
@@ -289,11 +289,11 @@ plot_GMM_clusters <- function(gmm_clustering,
                                          y = tsne2,
                                          color = as.factor(cluster)),
                             ) +
-        ggplot2::ggtitle("TSNE plot of GMM clusters") +
-        ggplot2::xlab("TSNE1") +
-        ggplot2::ylab("TSNE2") +
-        ggplot2::labs(color = "Cluster") +
-        viridis::scale_color_viridis(discrete = TRUE) +
+        ggplot2::labs(title = "TSNE plot of GMM clusters",
+                      x = "TSNE1",
+                      y = "TSNE2",
+                      color = "Cluster") +
+        ggplot2::scale_color_viridis_d() +
         ggplot2::theme_bw()
 
     return(tsne_plot)
