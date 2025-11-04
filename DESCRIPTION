@@ -40,7 +40,8 @@ Suggests:
     DescTools,
     readr,
     mockr,
-    viridis,
+    covr,
+    viridis
 URL: https://github.com/laaeett/clustsimlR
 BugReports: https://github.com/laaeett/clustsimlR/issues
 Config/testthat/edition: 3
