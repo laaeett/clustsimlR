@@ -1,0 +1,310 @@
+---
+title: "Using clustsimlR in single-cell clustering analysis"
+author: "Laeticia Liawas"
+date: "`r format(Sys.time(), '%d %b %Y')`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: false
+vignette: >
+  %\VignetteIndexEntry{Using clustsimlR in single-cell clustering analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = "center", 
+               out.width = "90%",
+               fig.width = 6, fig.height = 5.5,
+               dev.args=list(pointsize=10),
+               par = TRUE, # needed for setting hook 
+               collapse = TRUE, # collapse input & ouput code in chunks
+               warning = FALSE)
+knit_hooks$set(par = function(before, options, envir)
+  { if(before && options$fig.show != "none") 
+       par(family = "sans", mar=c(4.1,4.1,1.1,1.1), mgp=c(3,1,0), tcl=-0.5)
+})
+set.seed(42) # for exact reproducibility
+
+library("clustsimlR")
+```
+       
+## Introduction
+
+`clustsimlr` is a package intended to provide an interface for people working 
+with single-cell data to conduct clustering analysis in a unique way. To be more precise, this package provides a straightforward pipeline for analysing how clusters inferred from Gaussian Mixture Modelling differ through the within-cluster covariance matrices, from start to end.
+
+**This document gives a tour of clustsimlR (version 0.1.0)**.
+See `help(package = "clustsimlR")` for further details. 
+
+You can install `clustsimlR` and attach it to your current work session using the following commands:
+
+```{r, eval = FALSE}
+require("devtools")
+devtools::install_github("laaeett/clustsimlR", build_vignettes = TRUE)
+library("clustsimlR")
+```
+
+To list all functions available in the package:
+```{r}
+ls("package:clustsimlR")
+```
+
+
+## Tutorial
+
+In this section, we will look at a sample workflow using `clustsimlR`, step-by-step.
+
+### 0. Load data
+
+Before we begin any work, it is a given that we will need our data.
+`clustsimlR` is being developed with the intention of it working with any type of single-cell data. However, different types of single-cell data typically undergoes different kinds of preprocessing steps, quality control, and the like. As such, one underlying assumption for this package is that **the data has undergone at least some of the preprocessing steps appropriate for the kind of data**. It is recommended that you take a look at the functions available in this package to get an idea of what prior steps need to be done.
+
+With that out of the way, let us load the data we will look at for this tutorial. `clustsimlR` provides a toy dataset for exploratory purposes. This dataset was adapted from a [larger dataset](https://lincs.hms.harvard.edu/mcf10a/) of single-cell immunofluorescence data on MCF10A cells 24h after application of various concentrations of different cancer-killing drugs. More info can be found in the help documentation for the dataset. To load this toy dataset and save it to a dataframe, we can run the following commands:
+
+```{r}
+data("dasatinib")
+df <- dasatinib
+
+# Let's also take a look at what we are dealing with here
+summary(df)
+```
+
+This dataset consists of 5 columns--the first column identifying each cell with a number, the second column representing the concentration of drug (dasatinib) applied, and the immunofluorescence data for 4 different proteins. For this package, we also assume that **the data has been formatted such that rows represent individual cells, and columns represent features e.g. proteins or genes**.
+
+The protein data has been log10-transformed and standardised by z-score. Let's see how this data looks before we continue:
+
+```{r}
+head(df)
+```
+
+```{r}
+tail(df)
+```
+
+### 1. Data checking
+
+`clustsimlR` provides a function to check the data for certain 'red flags', in particular, zero-inflation and missing values. The `checkEverything` function checks the data for missing values (`NA` or `NaN`) and fixes them by imputation through the mean of the column. It also checks for zero-inflation and can fix them by removing zero-inflated genes and cells. Let us check the sample dataset using this function:
+
+```{r}
+checkEverything(df) # returns NULL if successful
+```
+
+It may seem like the code above did nothing, but this really means that the data we have had passed the checks in `checkEverything`. 
+
+You can also customise the behaviour of `checkEverything` to not fix the missing values or zero-inflation, and instead throw an error (for missing values), or messages (for zero-inflation). This is useful if you would like to deal with the matter yourself.
+
+Additionally, each function in this package that works on the data itself (and not a 'processed' version of the data like PCA scores) includes a call to `checkEverything`. This is to ensure the data is well-formatted for downstream analyses, to minimise problems that may pop up down the road.
+
+
+### 2. PCA
+
+Principal component analysis (PCA) is a common step in single-cell data analysis. This step is often done for dimensionality reduction, but can also be used to analyse the data as a whole. In our package, we offer PCA under the lens of the latter purpose. `clustsimlr` includes a function that allows the user to conduct PCA, and analyse the results using a Scree plot and a heatmap of the PC coefficients.
+
+Firstly, we need to ensure the data we pass into the function excludes any non-numeric and categorical data. To do this for our sample data (where the first two columns are the cell number and concentration), you can run the following commands:
+
+```{r}
+# take a subset of the data without our index col. or categorical data
+# i.e. first two columns
+df_numeric <- df[,-c(1,2)]
+
+# sanity check, look at the new data frame
+head(df_numeric)
+```
+
+Now we can use this with the `PCA` function, with a scree plot, as follows:
+
+```{r}
+# only plot scree plot of explained variance per PC
+
+pca_results <- PCA(df_numeric, pc_heatmap = FALSE)
+```
+
+As expected, the first PC appears to 'explain' the most of the variance in the data. But this plot obviously does not tell us more than that. `PCA` also offers to users a heatmap of the PC coefficients, which can be done as follows:
+
+```{r}
+# only plot PC heatmap
+# note: both plots can be created in one function call (default behaviour)
+# we do them separately here, which you can also do if you wish
+
+pca_results <- PCA(df_numeric, scree_plot = FALSE)
+
+```
+From the heatmap, we see that the PC that explains most of the variance essentially implies that "it's a mix of every protein being measured". Fair enough. The other components actually seem like they have more to say. For example, the last component (representing the PC that explains the least variance) seems to imply that one protein is being downregulated. Of course, since this is a small subset of a larger dataset, it would be difficult to make any conclusions just from this little heatmap. But hopefully this gives you a rough idea on what these plots can do for you.
+
+Another way to explore the data is to plot the PC scores for each cell with respect to two PCs of your choice:
+
+```{r}
+# input the pca results from PCA() and the PCs you want as the axes
+# default is 1 and 2
+plot_PC(pca_results)
+```
+
+```{r}
+# change the PC axes for your plot
+plot_PC(pca_results, 2, 3)
+```
+
+By plotting different combinations of PCs, we are (in a sense), 'rotating' the data and looking at its shape, at least in PC space. Although not as interesting for a dataset with relatively few datapoints such as our toy dataset, it is much more interesting to see using a larger dataset.
+
+### 3. Clustering
+
+As you may expect, `clustsimlR` offers functionality for clustering analysis, namely through Gaussian Mixture Modelling. As such, another underlying assumption for the data in this package is that **the data (before or after transformations and processing) can be modelled by some finite number of Gaussian distributions**. One quick and dirty way to check this is to plot histograms of the different columns in your data: 
+
+```{r}
+hist(df[,3])
+```
+
+For the sake of this tutorial, let's go ahead and do GMM. First of all, let us think about what hyperparameters we want to use for clustering. This package includes a function to help you do this, which is `plot_loss`. This function plots the BIC (Bayesian Information Criterion) and ICL (Integrated Complete-data Likelihood) for different models, and for different numbers of clusters. GMM functionality is provided by the `mclust` package. As such, for more information on the models, you can refer to `help(package = "clustsimlR")`. 
+
+Just like for `PCA`, this function expects numeric and non-categorical data. Additionally, it is recommended that you do some dimensionality reduction on the dataset (e.g. using PCA), due to GMM fitting being computationally heavy. 
+To demonstrate, let's take our PCA results, and only use the first 3 components. 
+
+```{r}
+df_reduced <- pca_results$scores[, -4]
+
+head(df_reduced)
+```
+
+First, let us run `plot_loss`, to see how different models and numbers of clusters influences the GMM fit.
+
+```{r}
+plot_loss(df_reduced)
+```
+
+Generally, you want to pick the model and number of clusters that gives the lowest BIC, or the highest ICL. One thing to note is that more complex models involve a lot more values in fitting, so ultimately they do poorly on small datasets (in fact, it is not really suitable to do this kind of analysis for small datasets). However, just for the sake of this tutorial (to demonstrate how the package works), let us look past this caveat for now.
+
+Running `plot_loss` and choosing hyperparameters based off of the plots you get can save time in the fitting process. However, one might be overwhelmed from all those lines. The actual fitting process, using `fit_GMM` can help you choose the best model based on optimal BIC value, if you do not choose one. Let's take advantage of this feature. 
+
+```{r}
+# avoid using too many clusters for small datasets
+gmm_results <- fit_GMM(df_reduced, num_clust = 2, inform_progress = FALSE)
+```
+
+How can we look at these clusters? One way to do it would be to plot the data, identified by cluster, on a t-SNE plot. While our data only has 3 dimensions, this kind of plot is useful for high-dimensional data, which you would often find yourself working with nowadays. To plot a t-SNE coloured by cluster, we can run the following commands:
+
+```{r}
+plot_GMM_clusters(gmm_results)
+```
+
+Before going to the next step, another thing to note here is that the functions we used in this section involve some randomness in initialisation. As such, for reproducibility, you can set a seed for your function calls:
+
+```{r}
+plot_GMM_clusters(gmm_results, seed = 43)
+
+plot_GMM_clusters(gmm_results, seed = 43)
+
+# same plot
+```
+
+### 4. Cluster distance
+
+Because we used Gaussian Mixture Modelling for our clustering, we are able to represent the clusters we find through their within-cluster covariance matrices. `clustsimlR` offers a way to compute a distance metric to represent how different the clusters we get are from each other. This metric as described by Förstner & Moonen (2003) is defined for two covariance matrices (specifically, two square, positive, real, definite matrices) $A, B$ as follows:
+
+$$d^{2}(\textbf{A, B}) = \text{tr}(\ln^2(\sqrt{\textbf{A}^{-1}}\textbf{B}\sqrt{\textbf{A}^{-1}}))$$
+To directly calculate the distance between two covariance matrices, we can use the `calculate_dist` function, as shown:
+
+```{r}
+# covariances from our GMM fitting
+covA <- gmm_results$parameters$variance$sigma[,,1]
+covB <- gmm_results$parameters$variance$sigma[,,2]
+
+calculate_dist(covA, covB)
+```
+Generally, the higher the value, the more different the two matrices are. Fittingly, if $\text{A} = \text{B}$, then $d^2 = 0$.
+
+We can also compute a distance matrix, and plot a heatmap based on the intercluster difference as calculated by the previous function, using the `intercluster_dist` function that we offer:
+
+```{r}
+dist_mat <- intercluster_dist(gmm_results)
+```
+
+The result we get is a bit underwhelming since we only have two clusters. But if we were to run this after fitting a higher number of clusters:
+
+```{r}
+gmm_results_2 <- fit_GMM(pca_results$scores, num_clust = 10)
+dist_mat_2 <- intercluster_dist(gmm_results_2)
+```
+
+We see a more interesting display. For example, it appears that cluster 4 and 7 are really different from each other. This begs the question: what makes them different? For example, what protein levels, and what conditions (i.e. drug concentration)? These are just some examples of follow-up questions you could pursue after the end of this workflow offered by this package.
+
+
+## Summary: Assumptions for this package
+
+-The data has undergone at least some of the preprocessing steps appropriate for the kind of data, especially if they are unique to the type of data.
+
+-The data has been formatted such that rows represent individual cells, and columns represent features e.g. proteins or genes.
+
+-The data (before or after transformations and processing) can be modelled by some finite number of Gaussian distributions.
+
+## Referencing this package
+
+Please use the following citation to reference this package.
+
+ 
+-Liawas, L. (2025) clustsimlR: Compute a Covariance-based Inter-cluster Similarity Metric. Unpublished. https://github.com/laaeett/clustsimlR
+  
+
+## References
+
+### Literature references
+ 
+-Biernacki, C., Celeux, G., & Govaert, G. (2000). Assessing a mixture model for clustering with the integrated completed likelihood. \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence}, 22(7), 719–725. https://doi.org/10.1109/34.865189
+
+- Central Limit Theorem. (2008). In The Concise Encyclopedia of Statistics (pp. 66–68). Springer New York. https://doi.org/10.1007/978-0-387-32833-1_50
+
+-Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant analysis and density estimation. \emph{Journal of the American Statistical Association}, 97(458), 611-631.
+
+-Fraley, C., & Raftery, A. E. (2007). Bayesian regularization for normal mixture estimation and model-based clustering. \emph{Journal of Classification}, 24(2), 155-181.
+
+-Förstner, W., & Moonen, B. (2003). A Metric for Covariance Matrices. In Geodesy-The Challenge of the 3rd Millennium (pp. 299–309). Springer Berlin Heidelberg. https://doi.org/10.1007/978-3-662-05296-9_31
+
+-Jolliffe, I. T. (2002). \emph{Principal Component Analysis}, 2nd Edition, New York: Springer.
+
+-Koleti, A., Terryn, R., Stathias, V., Chung, C., Cooper, D. J., Turner, J. P., Vidović, D., Forlin, M., Kelley, T. T., D’Urso, A., Allen, B. K., Torre, D., Jagodnik, K. M., Wang, L., Jenkins, S. L., Mader, C., Niu, W., Fazel, M., Mahi, N., … Schürer, S. C. (2018). Data Portal for the Library of Integrated Network-based Cellular Signatures (LINCS) program: integrated access to diverse large-scale cellular perturbation response data. \emph{Nucleic Acids Research}, 46(D1), D558–D566. https://doi.org/10.1093/nar/gkx1063
+
+-Kantarjian, H., Jabbour, E., Grimley, J., & Kirkpatrick, P. (2006). Dasatinib. \emph{Nature Reviews Drug Discovery}, 5(9), 717–718. https://doi.org/10.1038/nrd2135
+ 
+-L.J.P. van der Maaten. Accelerating t-SNE using Tree-Based Algorithms. Journal of Machine Learning Research 15(Oct):3221-3245, 2014.
+  
+-Lin, J.-R., Fallahi-Sichani, M., & Sorger, P. K. (2015). Highly multiplexed imaging of single cells using a high-throughput cyclic immunofluorescence method. \emph{Nature Communications}, 6(1), 8390. https://doi.org/10.1038/ncomms9390
+
+-Upton, G., & Cook, I. (2014). Scree plot. In \emph{A Dictionary of Statistics (3rd ed.)}. Oxford University Press.
+
+-van der Maaten, L.J.P. & Hinton, G.E., (2008). Visualizing data using t-SNE. \emph{Journal of Machine Learning Research}, 9(86), 2579-2605.
+  
+
+### References for packages used for `clustsimlR` development:
+
+Citations generated by `citation("package_name")`:
+ 
+-Bache S, Wickham H (2025). _magrittr: A Forward-Pipe Operator for R_. doi:10.32614/CRAN.package.magrittr <https://doi.org/10.32614/CRAN.package.magrittr>, R package version 2.0.4, <https://CRAN.R-project.org/package=magrittr>.
+
+-Bates D, Maechler M, Jagan M (2025). _Matrix: Sparse and Dense Matrix Classes and Methods_. doi:10.32614/CRAN.package.Matrix <https://doi.org/10.32614/CRAN.package.Matrix>, R package version 1.7-3, <https://CRAN.R-project.org/package=Matrix>.
+
+-H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
+-Wickham H, François R, Henry L, Müller K, Vaughan D (2023). _dplyr: A Grammar of Data Manipulation_. doi:10.32614/CRAN.package.dplyr <https://doi.org/10.32614/CRAN.package.dplyr>, R package version 1.1.4, <https://CRAN.R-project.org/package=dplyr>.
+
+-Harrell Jr F (2025). _Hmisc: Harrell Miscellaneous_. doi:10.32614/CRAN.package.Hmisc <https://doi.org/10.32614/CRAN.package.Hmisc>, R package version 5.2-4, <https://CRAN.R-project.org/package=Hmisc>.
+
+-Jesse H. Krijthe (2015). Rtsne: T-Distributed Stochastic Neighbor Embedding using a Barnes-Hut Implementation, URL: https://github.com/jkrijthe/Rtsne
+
+-Kolde R (2025). _pheatmap: Pretty Heatmaps_. doi:10.32614/CRAN.package.pheatmap <https://doi.org/10.32614/CRAN.package.pheatmap>, R package version 1.0.13, <https://CRAN.R-project.org/package=pheatmap>.
+
+-Maechler M, Dutang C, Goulet V (2024). _expm: Matrix Exponential, Log, 'etc'_. doi:10.32614/CRAN.package.expm <https://doi.org/10.32614/CRAN.package.expm>, R package version 1.0-0, <https://CRAN.R-project.org/package=expm>.
+
+-Scrucca L, Fraley C, Murphy TB, Raftery AE (2023). _Model-Based Clustering, Classification, and Density Estimation Using mclust in R_. Chapman and Hall/CRC. ISBN 978-1032234953, doi:10.1201/9781003277965 <https://doi.org/10.1201/9781003277965>, <https://mclust-org.github.io/book/>.
+  
+
+
+## R session info
+
+```{r}
+sessionInfo()
+```
+
+
+
+
