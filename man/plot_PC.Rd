@@ -12,10 +12,12 @@ outputted by \code{PCA}. The components of the list are as described in
 \code{?stats::princomp}.}
 
 \item{pci}{An integer indicating which principal component to plot as the
-x-axis. Default value is 1, i.e. PC1 as the x-axis}
+x-axis. Default value is 1, i.e. PC1 as the x-axis. If non-integer numeric
+values are entered, will be coerced into an integer (rounded down).}
 
 \item{pcj}{An integer indicating which principal component to plot as the
-y-axis. Default value is 2, i.e. PC2 as the y-axis.}
+y-axis. Default value is 2, i.e. PC2 as the y-axis. If non-integer numeric
+values are entered, will be coerced into an integer (rounded down).}
 }
 \value{
 A ggplot2 scatter plot of of the data in the space defined by

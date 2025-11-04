@@ -95,9 +95,11 @@ PCA <- function(data,
 #' outputted by \code{PCA}. The components of the list are as described in
 #' \code{?stats::princomp}.
 #' @param pci An integer indicating which principal component to plot as the
-#' x-axis. Default value is 1, i.e. PC1 as the x-axis
+#' x-axis. Default value is 1, i.e. PC1 as the x-axis. If non-integer numeric
+#' values are entered, will be coerced into an integer (rounded down).
 #' @param pcj An integer indicating which principal component to plot as the
-#' y-axis. Default value is 2, i.e. PC2 as the y-axis.
+#' y-axis. Default value is 2, i.e. PC2 as the y-axis. If non-integer numeric
+#' values are entered, will be coerced into an integer (rounded down).
 #'
 #' @returns A ggplot2 scatter plot of of the data in the space defined by
 #' two principal components PCi and PCj.
@@ -125,14 +127,6 @@ PCA <- function(data,
 plot_PC <- function(pca_data,
                     pci = 1,
                     pcj = 2) {
-    if(pci > ncol(pca_data$scores) || pcj > ncol(pca_data$scores)) {
-        stop("Requested principal component exceeds number of components
-             in PCA results.\n")
-    }
-
-    if(pci == 0 || pcj == 0){
-        stop("PC indices must be >= 1.\n")
-    }
 
     if(!(is.integer(pci) && is.integer(pcj))) {
         if(is.numeric(pci)) {
@@ -146,16 +140,25 @@ plot_PC <- function(pca_data,
         }
     }
 
+    if(pci > ncol(pca_data$scores) || pcj > ncol(pca_data$scores)) {
+        stop("Requested principal component exceeds number of components
+             in PCA results.\n")
+    }
+
+    if(pci <= 0 || pcj <= 0){
+        stop("PC indices must be >= 1.\n")
+    }
+
     pc_scores <- as.data.frame(pca_data$scores)
     xcol <- sprintf("Comp.%d", pci)
     ycol <- sprintf("Comp.%d", pcj)
-    ggplot2::ggplot(pc_scores) +
+    pc_plot <- ggplot2::ggplot(pc_scores) +
     ggplot2::geom_point(ggplot2::aes(x = .data[[xcol]],
                                      y = .data[[ycol]])) +
-    ggplot2::xlab(sprintf("PC%d", pci)) +
-    ggplot2::ylab(sprintf("PC%d", pcj)) +
-    ggplot2::ggtitle(sprintf("Scatter plot of PC%d vs. PC%d", pci, pcj))
-
+    ggplot2::labs(title = sprintf("Scatter plot of PC%d vs. PC%d", pci, pcj),
+                  x = sprintf("PC%d", pci),
+                  y = sprintf("PC%d", pcj))
+    return(pc_plot)
 }
 
 
