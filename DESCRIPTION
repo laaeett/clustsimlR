@@ -41,7 +41,9 @@ Suggests:
     readr,
     mockr,
     covr,
-    viridis
+    viridis,
+    knitr
 URL: https://github.com/laaeett/clustsimlR
 BugReports: https://github.com/laaeett/clustsimlR/issues
 Config/testthat/edition: 3
+VignetteBuilder: knitr
