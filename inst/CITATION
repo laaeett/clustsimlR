@@ -1,0 +1,13 @@
+citHeader("To cite clustsimlR in publications use:")
+
+bibentry(
+  bibtype = "Unpublished",
+  title = "clustsimlR: Compute a Covariance-based Inter-cluster
+    Similarity Metric",
+  author = "Laeticia Liawas",
+  note = "Unpublished",
+  year = "2025",
+  textVersion = "Liawas, L. (2025) clustsimlR: Compute a Covariance-based
+  Inter-cluster Similarity Metric. Unpublished.
+  https://github.com/laaeett/clustsimlR"
+)
