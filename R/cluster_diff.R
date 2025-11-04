@@ -46,12 +46,12 @@ calculate_dist <- function(covA, covB) {
         stop("Matrices must both be square, and have the same dimensions. \n")
     }
 
-    if(any(covA < 0) || any(covB < 0)) {
-        stop("Matrices must be positive. \n")
-    }
-
     if(is.complex(covA) || is.complex(covB)) {
         stop("Matrices must only have real numbers. \n")
+    }
+
+    if(any(covA < 0) || any(covB < 0)) {
+        stop("Matrices must be positive. \n")
     }
 
     inverse_A <- solve(covA)
