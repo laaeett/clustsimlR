@@ -89,7 +89,7 @@ For more information, please refer to the vignette and the help
 documentation available. An overview of the package is also illustrated
 in the image below:
 
-![](~./inst/extdata/clustsimlR_overview.png)
+![](./inst/extdata/clustsimlR_overview.png)
 
 ## Contributions:
 
