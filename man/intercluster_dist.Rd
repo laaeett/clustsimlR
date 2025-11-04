@@ -16,14 +16,14 @@ resulting distance matrix. Default is TRUE.}
 \value{
 A \eqn{\left(G \times G\right)} distance matrix, where \eqn{G} is
 the number of clusters. Distances are based on the metric described by
-Förstner & Moonen, 1999.
+Förstner & Moonen, 2003.
 }
 \description{
 Compute a distance matrix for within-cluster covariances from Gaussian
 Mixture Modelling, where each element \eqn{a_{i,j}} is the distance between
 the within-cluster covariance matrices of cluster \eqn{i} and \eqn{j}.
 Also can plot a heatmap based on this distance matrix. Distances are
-computed based on the metric described by Förstner & Moonen, 1999.
+computed based on the metric described by Förstner & Moonen, 2003.
 }
 \examples{
 # load dasatinib dataset

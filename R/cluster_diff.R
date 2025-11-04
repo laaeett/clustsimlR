@@ -4,7 +4,7 @@
 #' Compute the distance between two covariance matrices
 #'
 #' Compute the distance between two covariance matrices as described by Förstner
-#'  & Moonen, 1999. In particular, the squared distance
+#'  & Moonen, 2003. In particular, the squared distance
 #'  \eqn{d^{2}\left(\textbf{A, B}\right)} between two symmetric positive
 #'  matrices \eqn{\textbf{A}} and \eqn{\textbf{B}} are defined as follows:
 #'  \deqn{\text{tr}\left(\ln^{2}\left(\sqrt{\textbf{A}^{-1}}\textbf{B}
@@ -16,7 +16,7 @@
 #' @param covA A positive, real, square, symmetric matrix.
 #' @param covB A positive, real, square, symmetric matrix.
 #' @returns The distance between clustA and clustB, based on the metric defined
-#'  by Förstner & Moonen, 1999.
+#'  by Förstner & Moonen, 2003.
 #'
 #' @importFrom expm sqrtm logm
 #' @import Matrix
@@ -75,7 +75,7 @@ calculate_dist <- function(covA, covB) {
 #'  Mixture Modelling, where each element \eqn{a_{i,j}} is the distance between
 #'  the within-cluster covariance matrices of cluster \eqn{i} and \eqn{j}.
 #'  Also can plot a heatmap based on this distance matrix. Distances are
-#'  computed based on the metric described by Förstner & Moonen, 1999.
+#'  computed based on the metric described by Förstner & Moonen, 2003.
 #'
 #' @param gmm_clustering The output of \code{clustsimlR::fit_GMM}. More
 #'  specifically, an object of class `Mclust` (see \code{?mclust::Mclust}).
@@ -83,7 +83,7 @@ calculate_dist <- function(covA, covB) {
 #'  resulting distance matrix. Default is TRUE.
 #' @returns A \eqn{\left(G \times G\right)} distance matrix, where \eqn{G} is
 #'  the number of clusters. Distances are based on the metric described by
-#'  Förstner & Moonen, 1999.
+#'  Förstner & Moonen, 2003.
 #'
 #' @importFrom pheatmap pheatmap
 #'

@@ -45,6 +45,9 @@ Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant
 analysis and density estimation. \emph{Journal of the American Statistical
 Association}, 97(458), 611-631.
 
+L.J.P. van der Maaten. (2014). Accelerating t-SNE using tree-based
+algorithms. \emph{Journal of Machine Learning Research} 15(Oct), 3221-3245.
+
 van der Maaten, L.J.P. & Hinton, G.E., (2008). Visualizing data using t-SNE.
 \emph{Journal of Machine Learning Research}, 9(86), 2579-2605.
 }

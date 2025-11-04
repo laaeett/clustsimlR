@@ -49,6 +49,10 @@
 #'
 #' @references
 #'
+#' Central Limit Theorem. (2008). In The Concise Encyclopedia of Statistics
+#' (pp. 66–68). Springer New York.
+#' https://doi.org/10.1007/978-0-387-32833-1_50
+#'
 #' Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant
 #' analysis and density estimation. \emph{Journal of the American Statistical
 #' Association}, 97(458), 611-631.
@@ -263,6 +267,9 @@ plot_loss <- function(data,
 #' Fraley, C., & Raftery, A. E. (2002). Model-based clustering, discriminant
 #' analysis and density estimation. \emph{Journal of the American Statistical
 #' Association}, 97(458), 611-631.
+#'
+#' L.J.P. van der Maaten. (2014). Accelerating t-SNE using tree-based
+#' algorithms. \emph{Journal of Machine Learning Research} 15(Oct), 3221-3245.
 #'
 #' van der Maaten, L.J.P. & Hinton, G.E., (2008). Visualizing data using t-SNE.
 #' \emph{Journal of Machine Learning Research}, 9(86), 2579-2605.

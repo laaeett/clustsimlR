@@ -13,11 +13,11 @@ calculate_dist(covA, covB)
 }
 \value{
 The distance between clustA and clustB, based on the metric defined
-by Förstner & Moonen, 1999.
+by Förstner & Moonen, 2003.
 }
 \description{
 Compute the distance between two covariance matrices as described by Förstner
-& Moonen, 1999. In particular, the squared distance
+& Moonen, 2003. In particular, the squared distance
 \eqn{d^{2}\left(\textbf{A, B}\right)} between two symmetric positive
 matrices \eqn{\textbf{A}} and \eqn{\textbf{B}} are defined as follows:
 \deqn{\text{tr}\left(\ln^{2}\left(\sqrt{\textbf{A}^{-1}}\textbf{B}
