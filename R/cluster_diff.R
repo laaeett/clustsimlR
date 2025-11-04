@@ -43,12 +43,15 @@
 calculate_dist <- function(covA, covB) {
     if(!(ncol(covA) == nrow(covA) && nrow(covA) == nrow(covB)
          && ncol(covA) == ncol(covB))) {
-        stop("Matrices must both be square, and have the same dimensions.")
+        stop("Matrices must both be square, and have the same dimensions. \n")
     }
 
-    # if not symmetric, throw fit
     if(any(covA < 0) || any(covB < 0)) {
-        stop("Matrices must be positive")
+        stop("Matrices must be positive. \n")
+    }
+
+    if(is.complex(covA) || is.complex(covB)) {
+        stop("Matrices must only have real numbers. \n")
     }
 
     inverse_A <- solve(covA)
@@ -106,7 +109,6 @@ calculate_dist <- function(covA, covB) {
 intercluster_dist <- function(gmm_clustering,
                               plot = TRUE) {
 
-    #TODO: somehow define a plot() method for this perhaps?
 
     n_clust <- gmm_clustering$G
     covs <- gmm_clustering$parameters$variance$sigma
