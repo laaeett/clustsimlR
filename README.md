@@ -76,11 +76,12 @@ browseVignettes("clustsimlR") # load vignettes
 
 7.  ***calculate_dist*** for computing the distance between two
     covariance matrices, using the metric described by Förstner &
-    Moonen, (2003).
+    Moonen, (2003)
 
-8.***intercluster_dist*** for computing a distance matrix based on
-inter-distances between within-cluster covariance matrices from GMM
-analysis, with functionality to plot a heatmap of the distance matrix.
+8.  ***intercluster_dist*** for computing a distance matrix based on
+    inter-distances between within-cluster covariance matrices from GMM
+    analysis, with functionality to plot a heatmap of the distance
+    matrix.
 
 The package also includes one sample dataset, called “dasatinib”.
 
