@@ -102,6 +102,10 @@ plot_loss(df)
 
 }
 \references{
+Central Limit Theorem. (2008). In The Concise Encyclopedia of Statistics
+(pp. 66–68). Springer New York.
+https://doi.org/10.1007/978-0-387-32833-1_50
+
 Biernacki, C., Celeux, G., & Govaert, G. (2000). Assessing a mixture model
 for clustering with the integrated completed likelihood.
 \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence}, 22(7),
@@ -117,6 +121,4 @@ Classification}, 24(2), 155-181.
 
 Jolliffe, I. T. (2002). \emph{Principal Component Analysis}, 2nd Edition,
 New York: Springer.
-
-#TODO: add central lim theorem ref
 }
