@@ -8,13 +8,16 @@
 #'  \eqn{d^{2}\left(\textbf{A, B}\right)} between two symmetric positive
 #'  matrices \eqn{\textbf{A}} and \eqn{\textbf{B}} are defined as follows:
 #'  \deqn{\text{tr}\left(\ln^{2}\left(\sqrt{\textbf{A}^{-1}}\textbf{B}
-#'  \sqrt{\textbf{A}^{-1}}\right)\right)}
+#'  \sqrt{\textbf{A}^{-1}}\right)\right)}.
+#'  In layman's terms, this equation computes how much 'stretching' would be
+#'  needed to transform matrix \eqn{B} to \eqn{A}, and sums this stretching up
+#'  for all directions. This sum is then the distance between the two matrices.
 #'  Though intended to be applied to covariance matrices, this function
 #'  would work for any two positive, real, square, symmetric (definite)
 #'  matrices.
 #'
-#' @param covA A positive, real, square, symmetric matrix.
-#' @param covB A positive, real, square, symmetric matrix.
+#' @param covA A positive definite, real, square, symmetric matrix.
+#' @param covB A positive definite, real, square, symmetric matrix.
 #' @returns The distance between clustA and clustB, based on the metric defined
 #'  by Förstner & Moonen, 2003.
 #'
@@ -22,7 +25,7 @@
 #' @import Matrix
 #'
 #' @examples
-#' # initialise two positive symmetric square matrices
+#' # initialise two positive definite symmetric square matrices
 #' matA <- matrix(data = c(2, 1, 1, 2), nrow = 2, ncol = 2)
 #' matB <- matrix(data = c(3, 2, 2, 3), nrow = 2, ncol = 2)
 #' matC <- matrix(data = c(2, 1, 1, 2), nrow = 2, ncol = 2) # same as A
@@ -41,20 +44,29 @@
 #' @export
 #'
 calculate_dist <- function(covA, covB) {
-    if(!(ncol(covA) == nrow(covA) && nrow(covA) == nrow(covB)
+
+    # must be square and same dimensions
+    if (!(ncol(covA) == nrow(covA) && nrow(covA) == nrow(covB)
          && ncol(covA) == ncol(covB))) {
         stop("Matrices must both be square, and have the same dimensions. \n")
     }
 
+    # must be real
     if(is.complex(covA) || is.complex(covB)) {
         stop("Matrices must only have real numbers. \n")
     }
 
-    if(any(covA < 0) || any(covB < 0)) {
-        stop("Matrices must be positive. \n")
+    # must be symmetric
+    if (! Matrix::isSymmetric(covA) || ! Matrix::isSymmetric(covB)) {
+        stop("Matrices must be symmetric. \n")
     }
 
-    inverse_A <- solve(covA)
+    # must be positive definite
+    if (any(eigen(covA)$values < 0) || any(eigen(covB)$values < 0)) {
+        stop("Matrices must be positive definite. \n")
+    }
+
+    inverseA <- solve(covA)
     sqrt_inv_A <- expm::sqrtm(inverse_A)
     sqrt_inv_AxB <- sqrt_inv_A %*% covB
 
@@ -115,23 +127,19 @@ intercluster_dist <- function(gmm_clustering,
     distance_matrix <- matrix(nrow = n_clust, ncol = n_clust,
                               dimnames = list(1:n_clust, 1:n_clust))
 
-    for(i in 1:n_clust) {
-        for (j in 1:n_clust){
-            if(i == j) {
+    for (i in 1:n_clust) {
+        for (j in 1:n_clust) {
+            if (i == j) {
                 distance_matrix[i,j] <- 0
-            }
-
-            else if(!is.na(distance_matrix[j,i])){
+            } else if (!is.na(distance_matrix[j,i])) {
                 distance_matrix[i,j] <- distance_matrix[j,i]
-            }
-
-            else {
-                distance_matrix[i,j] <- calculate_dist(covs[,,i], covs[,,j])
+            } else {
+                distance_matrix[i,j] <- calculate_dist(covs[ ,,i], covs[ ,,j])
             }
         }
     }
 
-    if(plot) {
+    if (plot) {
         pheatmap::pheatmap(distance_matrix,
                            cluster_rows = FALSE,
                            cluster_cols = FALSE)

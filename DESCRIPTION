@@ -20,6 +20,7 @@ Description: Provides functions for single-cell data clustering analysis, with
     and how this shape differs between them.
 License: MIT + file LICENSE
 Depends: R (>= 4.3.0), Matrix
+biocViews: Visualization,Clustering,CellBiology
 Imports: 
     pheatmap,
     mclust,
@@ -28,7 +29,9 @@ Imports:
     Hmisc,
     dplyr,
     magrittr,
-    expm
+    expm,
+    grid,
+    shiny
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

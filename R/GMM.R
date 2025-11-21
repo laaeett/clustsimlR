@@ -39,10 +39,10 @@
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # run GMM clustering on the data
-#' gmm_results <- fit_GMM(df)
+#' gmm_results <- fit_GMM(if_data)
 #'
 #' # access a summary of the results
 #' summary(gmm_results)
@@ -144,10 +144,10 @@ fit_GMM <- function(data,
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # plot BIC and ICL values for 1 to 10 clusters
-#' plot_loss(df)
+#' plot_loss()
 #'
 #' @references
 #'
@@ -257,10 +257,10 @@ plot_loss <- function(data,
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # run GMM clustering on the data
-#' gmm_results <- fit_GMM(df)
+#' gmm_results <- fit_GMM(if_data)
 #'
 #' # plot t-SNE
 #' plot_GMM_clusters(gmm_results, seed = 42)
