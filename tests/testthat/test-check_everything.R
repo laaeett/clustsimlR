@@ -4,14 +4,14 @@ library(clustsimlR)
 test_that("stops when detect NA but not fixed", {
 
     missing_data_NA <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, NA, 9))
-    testthat::expect_error(clustsimlr::checkEverything(missing_data_NA,
+    testthat::expect_error(clustsimlr::check_everything(missing_data_NA,
                                                        clean_NA = FALSE))
 })
 
 test_that("stops when detect NaN but not fixed", {
 
     missing_data_NaN <- data.frame(c(1, 2, 3), c(4, NaN, 6), c(7, 8, 9))
-    testthat::expect_error(clustsimlr::checkEverything(missing_data_NaN,
+    testthat::expect_error(clustsimlr::check_everything(missing_data_NaN,
                                                        clean_NA = FALSE))
 })
 
@@ -25,15 +25,15 @@ test_that("calls cleanMissingData", {
 
     missing_data_NA <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, NA, 9))
     missing_data_NaN <- data.frame(c(1, 2, 3), c(4, NaN, 6), c(7, 8, 9))
-    testthat::expect_message(checkEverything(missing_data_NA),
+    testthat::expect_message(check_everything(missing_data_NA),
                              "correct function call :)")
-    testthat::expect_message(checkEverything(missing_data_NaN),
+    testthat::expect_message(check_everything(missing_data_NaN),
                              "correct function call :)")
 })
 
 test_that("skips checking zero-inflation if check_zero FALSE", {
     inflated_df <- data.frame(c(1, 0, 3), c(2, 0, 0), c(3, 0, 0))
-    testthat::expect_no_message(clustsimlR::checkEverything(inflated_df,
+    testthat::expect_no_message(clustsimlR::check_everything(inflated_df,
                                                             check_zero = FALSE),
                                 message = "Data appears to be zero-inflated.\n")
 })
@@ -48,7 +48,7 @@ test_that("calls checkZeroInflation", {
     })
 
     inflated_df <- data.frame(c(1, 0, 3), c(2, 0, 0), c(3, 0, 0))
-    testthat::expect_message(checkEverything(inflated_df),
+    testthat::expect_message(check_everything(inflated_df),
                              "correct function call :)")
 
 })
@@ -56,7 +56,7 @@ test_that("calls checkZeroInflation", {
 test_that("raise warning if chosen not to clean zero-inflation", {
 
     inflated_df <- data.frame(c(1, 0, 3), c(2, 0, 0), c(3, 0, 0))
-    testthat::expect_warning(clustsimlR::checkEverything(inflated_df,
+    testthat::expect_warning(clustsimlR::check_everything(inflated_df,
                                                          clean_zero = FALSE))
 
 })
@@ -77,13 +77,13 @@ test_that("calls cleanZeroInflation", {
 
     inflated_df <- data.frame(c(1, 0, 3), c(2, 0, 0), c(3, 0, 0))
 
-    testthat::expect_message(checkEverything(inflated_df),
+    testthat::expect_message(check_everything(inflated_df),
                              "correct function call :)")
 })
 
 test_that("well-formatted data (no missing value, not zero-inflated) passes", {
 
     ok_df <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
-    testthat::expect_no_condition(clustsimlR::checkEverything(ok_df))
+    testthat::expect_no_condition(clustsimlR::check_everything(ok_df))
 })
 

@@ -8,7 +8,7 @@
 #' weights of each variable in the principal component. Also, unless
 #' specified otherwise, will check for missing data and zeroes, and clean them.
 #'
-#' @inheritParams checkEverything
+#' @inheritParams check_everything
 #' @param data A data frame where each column represents a gene and each row
 #'  represents a single cell. Data frame passed into this parameter must be
 #'  numeric i.e. if a data frame has non-numeric columns, they must be
@@ -54,7 +54,7 @@ PCA <- function(data,
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
-    tryCatch(checkEverything(data,
+    tryCatch(check_everything(data,
                              check_zero,
                              overall_zero_threshold,
                              cell_zero_threshold,

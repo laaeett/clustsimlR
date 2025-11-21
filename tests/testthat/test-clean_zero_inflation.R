@@ -8,13 +8,13 @@ test_that("doesn't accept threshold values outside 0 <= x <= 1", {
     low_threshold <- -0.1
     ok_df <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
 
-    testthat::expect_error(clustsimlR:::cleanZeroInflation(ok_df,
+    testthat::expect_error(clustsimlR:::clean_zero_inflation(ok_df,
                                         cell_zero_threshold = high_threshold,
-                                        gene_zero_thresh = high_threshold))
-    testthat::expect_error(clustsimlR:::cleanZeroInflation(ok_df,
+                                        gene_zero_threshold = high_threshold))
+    testthat::expect_error(clustsimlR:::clean_zero_inflation(ok_df,
                                         cell_zero_threshold = low_threshold,
                                         gene_zero_threshold = low_threshold))
-    testthat::expect_no_error(clustsimlR:::cleanZeroInflation(ok_df,
+    testthat::expect_no_error(clustsimlR:::clean_zero_inflation(ok_df,
                                         cell_zero_threshold = ok_threshold,
                                         gene_zero_threshold = ok_threshold))
 })
@@ -27,9 +27,9 @@ test_that("data passes zero-inflation check after cleaning", {
     inflated_df_NaN <- data.frame(c(1, 2, 3), c(0, 0, 0), c(0, 0, 0),
                                   c(NaN, NaN, NaN))
 
-    fixed <- clustsimlR:::cleanZeroInflation(inflated_df)
-    fixed_NA <- clustsimlR:::cleanZeroInflation(inflated_df_NA)
-    fixed_NaN <- clustsimlR:::cleanZeroInflation(inflated_df_NaN)
+    fixed <- clustsimlR:::clean_zero_inflation(inflated_df)
+    fixed_NA <- clustsimlR:::clean_zero_inflation(inflated_df_NA)
+    fixed_NaN <- clustsimlR:::clean_zero_inflation(inflated_df_NaN)
 
     testthat::expect_false(clustsimlR:::checkZeroInflation(fixed))
     testthat::expect_false(clustsimlR:::checkZeroInflation(fixed_NA))
@@ -44,9 +44,9 @@ test_that("does not modify non zero-inflated data", {
     ok_df_NaN <- data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9),
                             c(NaN, NaN, NaN))
 
-    fixed <- clustsimlR:::cleanZeroInflation(ok_df)
-    fixed_NA <- clustsimlR:::cleanZeroInflation(ok_df_NA)
-    fixed_NaN <- clustsimlR:::cleanZeroInflation(ok_df_NaN)
+    fixed <- clustsimlR:::clean_zero_inflation(ok_df)
+    fixed_NA <- clustsimlR:::clean_zero_inflation(ok_df_NA)
+    fixed_NaN <- clustsimlR:::clean_zero_inflation(ok_df_NaN)
 
     testthat::expect_equal(fixed, ok_df)
     testthat::expect_equal(fixed_NA, ok_df_NA)

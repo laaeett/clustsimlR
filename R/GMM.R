@@ -29,7 +29,7 @@
 #' @param inform_progress A logical indicating whether to report progress
 #'  of GMM fitting while the function is running. Default is TRUE for
 #'  interactive sessions, and FALSE otherwise.
-#' @inheritParams checkEverything
+#' @inheritParams check_everything
 #' @returns The results of GMM clustering, as an object of class `Mclust`. If
 #'  multiple models were fitted, the results will provide the optimal model
 #'  based on BIC. The components of this object are as described in
@@ -80,7 +80,7 @@ fit_GMM <- function(data,
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
-    tryCatch(checkEverything(data,
+    tryCatch(check_everything(data,
                              check_zero,
                              overall_zero_threshold,
                              cell_zero_threshold,
@@ -189,7 +189,7 @@ plot_loss <- function(data,
 
     # check for missing data and zeroes(if user wants)
     # stops if found missing data but not fixed
-    tryCatch(checkEverything(data,
+    tryCatch(check_everything(data,
                              check_zero,
                              overall_zero_threshold,
                              cell_zero_threshold,

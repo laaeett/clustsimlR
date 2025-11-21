@@ -24,15 +24,15 @@
 #' dframe <- dasatinib
 #'
 #' # check for zero-inflation with default threshold of 0.5
-#' checkZeroInflation(dframe)
+#' check_zero_inflation(dframe)
 #'
 #' # change some of the data to zero
 #' dframe_zero_inflated <- data.frame(dframe)
 #' dframe_zero_inflated[, 2:4] <- 0
-#' checkZeroInflation(dframe_zero_inflated)
+#' check_zero_inflation(dframe_zero_inflated)
 #' }
 #'
-checkZeroInflation <- function(data,
+check_zero_inflation <- function(data,
                                overall_zero_threshold = 0.5) {
 
     if (overall_zero_threshold > 1 || overall_zero_threshold < 0) {
@@ -81,13 +81,13 @@ checkZeroInflation <- function(data,
 #' # change some of the data to zero
 #' dframe_zero_inflated <- data.frame(dframe)
 #' dframe_zero_inflated[,2:4] <- 0
-#' checkZeroInflation(dframe_zero_inflated)
+#' check_zero_inflation(dframe_zero_inflated)
 #'
-#' dframe_cleaned <- cleanZeroInflation(dframe_zero_inflated)
-#' checkZeroInflation(dframe_cleaned)
+#' dframe_cleaned <- clean_zero_inflation(dframe_zero_inflated)
+#' check_zero_inflation(dframe_cleaned)
 #' }
 #'
-cleanZeroInflation <- function(data,
+clean_zero_inflation <- function(data,
                                cell_zero_threshold = 0.5,
                                gene_zero_threshold = 0.5) {
 
@@ -162,26 +162,26 @@ cleanZeroInflation <- function(data,
 #' dframe <- dasatinib
 #'
 #' # check for missing values
-#' checkMissingData(dframe)
+#' check_missing_data(dframe)
 #'
 #' # change one of the values to NA
 #' dframe_one_NA <- data.frame(dframe)
 #' dframe_one_NA[1,2] <- NA
-#' dframe_NA_cleaned <- cleanMissingData(dframe_one_NA)
-#' checkMissingData(dframe_NA_cleaned)
+#' dframe_NA_cleaned <- clean_missing_data(dframe_one_NA)
+#' check_missing_data(dframe_NA_cleaned)
 #'
 #' #change one of the values to NaN
 #' dframe_one_NaN <- data.frame(dframe)
 #' dframe_one_NaN[1,2] <- 1/0
-#' dframe_NaN_cleaned <- cleanMissingData(dframe_one_NaN)
-#' checkMissingData(dframe_NaN_cleaned)
-#' checkMissingData(dframe_one_NaN)
+#' dframe_NaN_cleaned <- clean_missing_data(dframe_one_NaN)
+#' check_missing_data(dframe_NaN_cleaned)
+#' check_missing_data(dframe_one_NaN)
 #' }
 #' @importFrom Hmisc impute
 #' @importFrom dplyr mutate_all
 #' @importFrom magrittr %>%
 #'
-cleanMissingData <- function(data) {
+clean_missing_data <- function(data) {
 
     # changing NaN to NA for imputation
     data <- data %>% dplyr::mutate_all(~ifelse(is.nan(.), NA, .))
@@ -211,10 +211,10 @@ cleanMissingData <- function(data) {
 #'  in the data exceeds the expected number as computed from the threshold.
 #'  Zero-inflated genes and cells will then be removed unless specified not to.
 #'
-#' @inheritParams checkZeroInflation
-#' @inheritParams cleanZeroInflation
-#' @inheritParams checkMissingData
-#' @inheritParams cleanMissingData
+#' @inheritParams check_zero_inflation
+#' @inheritParams clean_zero_inflation
+#' @inheritParams check_missing_data
+#' @inheritParams clean_missing_data
 #' @param check_zero A logical indicating whether to check for zero-inflation.
 #' Default is TRUE.
 #' @param clean_zero A logical indicating whether to remove zero-inflated genes.
@@ -233,24 +233,24 @@ cleanMissingData <- function(data) {
 #' # change some of the data to zero
 #' dframe_zero_inflated <- data.frame(dframe)
 #' dframe_zero_inflated[,2:4] <- 0
-#' checkEverything(dframe_zero_inflated)
+#' check_everything(dframe_zero_inflated)
 #' head(dframe_zero_inflated)
 #'
 #' # change one of the values to NA
 #' dframe_one_NA <- data.frame(dframe)
 #' dframe_one_NA[1,2] <- NA
-#' checkEverything(dframe_one_NA)
+#' check_everything(dframe_one_NA)
 #' dframe_one_NA[1,2]
 #'
 #' #change one of the values to NaN
 #' dframe_one_NaN <- data.frame(dframe)
 #' dframe_one_NaN[1,2] <- 1/0
-#' checkEverything(dframe_one_NaN)
+#' check_everything(dframe_one_NaN)
 #' dframe_one_NaN[1,2]
 #'
 #' @export
 #'
-checkEverything <- function(data,
+check_everything <- function(data,
                             check_zero = TRUE,
                             overall_zero_threshold = 0.5,
                             cell_zero_threshold = 0.5,
@@ -262,7 +262,7 @@ checkEverything <- function(data,
         message("Data contains missing values or NaN values.\n")
 
         if (clean_NA) {
-            data <- cleanMissingData(data)
+            data <- clean_missing_data(data)
             message("Missing/NaN values imputed from mean gene expression.\n")
         }
 
@@ -271,12 +271,12 @@ checkEverything <- function(data,
         }
     }
 
-    if (check_zero && checkZeroInflation(data, overall_zero_threshold)) {
+    if (check_zero && check_zero_inflation(data, overall_zero_threshold)) {
         message("Data appears to be zero-inflated.\n")
 
         # user chooses to remove zero-inflated rows/columns
         if (clean_zero){
-            data <- cleanZeroInflation(data,
+            data <- clean_zero_inflation(data,
                                        cell_zero_threshold,
                                        gene_zero_threshold)
             message("Zero-inflated genes/cells removed.\n")
@@ -286,7 +286,7 @@ checkEverything <- function(data,
         # warn but run
         else {
             warning(
-            "Consider running cleanZeroInflation(data) before proceeding.\n")
+            "Consider running clean_zero_inflation(data) before proceeding.\n")
         }
     }
 
