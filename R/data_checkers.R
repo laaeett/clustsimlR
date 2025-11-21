@@ -21,21 +21,21 @@
 #' \dontrun{
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib
+#' dframe <- dasatinib
 #'
 #' # check for zero-inflation with default threshold of 0.5
-#' checkZeroInflation(df)
+#' checkZeroInflation(dframe)
 #'
 #' # change some of the data to zero
-#' df_zero_inflated <- data.frame(df)
-#' df_zero_inflated[, 2:4] <- 0
-#' checkZeroInflation(df_zero_inflated)
+#' dframe_zero_inflated <- data.frame(dframe)
+#' dframe_zero_inflated[, 2:4] <- 0
+#' checkZeroInflation(dframe_zero_inflated)
 #' }
 #'
 checkZeroInflation <- function(data,
                                overall_zero_threshold = 0.5) {
 
-    if(overall_zero_threshold > 1 || overall_zero_threshold < 0) {
+    if (overall_zero_threshold > 1 || overall_zero_threshold < 0) {
         stop("overall_zero_threshold must be between 0 and 1.")
     }
 
@@ -76,26 +76,26 @@ checkZeroInflation <- function(data,
 #' \dontrun{
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib
+#' dframe <- dasatinib
 #'
 #' # change some of the data to zero
-#' df_zero_inflated <- data.frame(df)
-#' df_zero_inflated[,2:4] <- 0
-#' checkZeroInflation(df_zero_inflated)
+#' dframe_zero_inflated <- data.frame(dframe)
+#' dframe_zero_inflated[,2:4] <- 0
+#' checkZeroInflation(dframe_zero_inflated)
 #'
-#' df_cleaned <- cleanZeroInflation(df_zero_inflated)
-#' checkZeroInflation(df_cleaned)
+#' dframe_cleaned <- cleanZeroInflation(dframe_zero_inflated)
+#' checkZeroInflation(dframe_cleaned)
 #' }
 #'
 cleanZeroInflation <- function(data,
                                cell_zero_threshold = 0.5,
                                gene_zero_threshold = 0.5) {
 
-    if(cell_zero_threshold > 1 || cell_zero_threshold < 0) {
+    if (cell_zero_threshold > 1 || cell_zero_threshold < 0) {
         stop("cell_zero_threshold must be between 0 and 1.")
     }
 
-    if(gene_zero_threshold > 1 || gene_zero_threshold < 0) {
+    if (gene_zero_threshold > 1 || gene_zero_threshold < 0) {
         stop("gene_zero_threshold must be between 0 and 1.")
     }
 
@@ -107,14 +107,14 @@ cleanZeroInflation <- function(data,
         num_zeroes <- sum(curr_gene == 0, na.rm = TRUE)
 
         # mark for removal if no. of zeroes exceeds threshold
-        if(num_zeroes > exp_zeroes) {
+        if (num_zeroes > exp_zeroes) {
             rm_genes <- c(rm_genes, colnames(data)[i])
         }
     }
     data <- data[, !(colnames(data) %in% rm_genes), drop = FALSE]
 
     # if all genes were removed
-    if(ncol(data) == 0) {
+    if (ncol(data) == 0) {
         stop("All genes were removed by zero-inflation filtering\n")
     }
 
@@ -126,11 +126,11 @@ cleanZeroInflation <- function(data,
         num_zeroes <- sum(curr_cell == 0, na.rm = TRUE)
 
         #mark for removal if no. of zeroes exceed threshold
-        if(num_zeroes > exp_zeroes) {
+        if (num_zeroes > exp_zeroes) {
             rm_cells <- c(rm_cells, i)
         }
     }
-    if(length(rm_cells) > 0){
+    if (length(rm_cells) > 0){
         data <- data[-rm_cells, , drop = FALSE]
     }
 
@@ -159,23 +159,23 @@ cleanZeroInflation <- function(data,
 #' \dontrun{
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib
+#' dframe <- dasatinib
 #'
 #' # check for missing values
-#' checkMissingData(df)
+#' checkMissingData(dframe)
 #'
 #' # change one of the values to NA
-#' df_one_NA <- data.frame(df)
-#' df_one_NA[1,2] <- NA
-#' df_NA_cleaned <- cleanMissingData(df_one_NA)
-#' checkMissingData(df_NA_cleaned)
+#' dframe_one_NA <- data.frame(dframe)
+#' dframe_one_NA[1,2] <- NA
+#' dframe_NA_cleaned <- cleanMissingData(dframe_one_NA)
+#' checkMissingData(dframe_NA_cleaned)
 #'
 #' #change one of the values to NaN
-#' df_one_NaN <- data.frame(df)
-#' df_one_NaN[1,2] <- 1/0
-#' df_NaN_cleaned <- cleanMissingData(df_one_NaN)
-#' checkMissingData(df_NaN_cleaned)
-#' checkMissingData(df_one_NaN)
+#' dframe_one_NaN <- data.frame(dframe)
+#' dframe_one_NaN[1,2] <- 1/0
+#' dframe_NaN_cleaned <- cleanMissingData(dframe_one_NaN)
+#' checkMissingData(dframe_NaN_cleaned)
+#' checkMissingData(dframe_one_NaN)
 #' }
 #' @importFrom Hmisc impute
 #' @importFrom dplyr mutate_all
@@ -187,7 +187,7 @@ cleanMissingData <- function(data) {
     data <- data %>% dplyr::mutate_all(~ifelse(is.nan(.), NA, .))
 
     # imputation based on column
-    for(i in 1:ncol(data)) {
+    for (i in 1:ncol(data)) {
         # imputation from mean
         data[, i] <- Hmisc::impute(data[, i], fun = mean)
 
@@ -228,25 +228,25 @@ cleanMissingData <- function(data) {
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib
+#' dframe <- dasatinib
 #'
 #' # change some of the data to zero
-#' df_zero_inflated <- data.frame(df)
-#' df_zero_inflated[,2:4] <- 0
-#' checkEverything(df_zero_inflated)
-#' head(df_zero_inflated)
+#' dframe_zero_inflated <- data.frame(dframe)
+#' dframe_zero_inflated[,2:4] <- 0
+#' checkEverything(dframe_zero_inflated)
+#' head(dframe_zero_inflated)
 #'
 #' # change one of the values to NA
-#' df_one_NA <- data.frame(df)
-#' df_one_NA[1,2] <- NA
-#' checkEverything(df_one_NA)
-#' df_one_NA[1,2]
+#' dframe_one_NA <- data.frame(dframe)
+#' dframe_one_NA[1,2] <- NA
+#' checkEverything(dframe_one_NA)
+#' dframe_one_NA[1,2]
 #'
 #' #change one of the values to NaN
-#' df_one_NaN <- data.frame(df)
-#' df_one_NaN[1,2] <- 1/0
-#' checkEverything(df_one_NaN)
-#' df_one_NaN[1,2]
+#' dframe_one_NaN <- data.frame(dframe)
+#' dframe_one_NaN[1,2] <- 1/0
+#' checkEverything(dframe_one_NaN)
+#' dframe_one_NaN[1,2]
 #'
 #' @export
 #'
@@ -258,10 +258,10 @@ checkEverything <- function(data,
                             clean_zero = TRUE,
                             clean_NA = TRUE) {
 
-    if(anyNA(data)) {
+    if (anyNA(data)) {
         message("Data contains missing values or NaN values.\n")
 
-        if(clean_NA) {
+        if (clean_NA) {
             data <- cleanMissingData(data)
             message("Missing/NaN values imputed from mean gene expression.\n")
         }
@@ -271,11 +271,11 @@ checkEverything <- function(data,
         }
     }
 
-    if(check_zero && checkZeroInflation(data, overall_zero_threshold)) {
+    if (check_zero && checkZeroInflation(data, overall_zero_threshold)) {
         message("Data appears to be zero-inflated.\n")
 
         # user chooses to remove zero-inflated rows/columns
-        if(clean_zero){
+        if (clean_zero){
             data <- cleanZeroInflation(data,
                                        cell_zero_threshold,
                                        gene_zero_threshold)
@@ -289,4 +289,8 @@ checkEverything <- function(data,
             "Consider running cleanZeroInflation(data) before proceeding.\n")
         }
     }
+
+    return(NULL)
 }
+
+# [END]

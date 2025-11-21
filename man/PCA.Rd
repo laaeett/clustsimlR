@@ -67,8 +67,8 @@ specified otherwise, will check for missing data and zeroes, and clean them.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
-pca_results <- PCA(df)
+if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+pca_results <- PCA(if_data)
 
 # access first 5 cells and their scores for each PC
 pca_results$scores[1:5, ]

@@ -7,9 +7,9 @@
 calculate_dist(covA, covB)
 }
 \arguments{
-\item{covA}{A positive, real, square, symmetric matrix.}
+\item{covA}{A positive definite, real, square, symmetric matrix.}
 
-\item{covB}{A positive, real, square, symmetric matrix.}
+\item{covB}{A positive definite, real, square, symmetric matrix.}
 }
 \value{
 The distance between clustA and clustB, based on the metric defined
@@ -21,13 +21,16 @@ Compute the distance between two covariance matrices as described by Förstner
 \eqn{d^{2}\left(\textbf{A, B}\right)} between two symmetric positive
 matrices \eqn{\textbf{A}} and \eqn{\textbf{B}} are defined as follows:
 \deqn{\text{tr}\left(\ln^{2}\left(\sqrt{\textbf{A}^{-1}}\textbf{B}
- \sqrt{\textbf{A}^{-1}}\right)\right)}
+ \sqrt{\textbf{A}^{-1}}\right)\right)}.
+In layman's terms, this equation computes how much 'stretching' would be
+needed to transform matrix \eqn{B} to \eqn{A}, and sums this stretching up
+for all directions. This sum is then the distance between the two matrices.
 Though intended to be applied to covariance matrices, this function
 would work for any two positive, real, square, symmetric (definite)
 matrices.
 }
 \examples{
-# initialise two positive symmetric square matrices
+# initialise two positive definite symmetric square matrices
 matA <- matrix(data = c(2, 1, 1, 2), nrow = 2, ncol = 2)
 matB <- matrix(data = c(3, 2, 2, 3), nrow = 2, ncol = 2)
 matC <- matrix(data = c(2, 1, 1, 2), nrow = 2, ncol = 2) # same as A

@@ -34,15 +34,15 @@ This function ignores NA or NaN values.
 \dontrun{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib
+dframe <- dasatinib
 
 # change some of the data to zero
-df_zero_inflated <- data.frame(df)
-df_zero_inflated[,2:4] <- 0
-checkZeroInflation(df_zero_inflated)
+dframe_zero_inflated <- data.frame(dframe)
+dframe_zero_inflated[,2:4] <- 0
+checkZeroInflation(dframe_zero_inflated)
 
-df_cleaned <- cleanZeroInflation(df_zero_inflated)
-checkZeroInflation(df_cleaned)
+dframe_cleaned <- cleanZeroInflation(dframe_zero_inflated)
+checkZeroInflation(dframe_cleaned)
 }
 
 }

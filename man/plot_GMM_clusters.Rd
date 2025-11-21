@@ -31,10 +31,10 @@ Plot a t-SNE visualisation of the data, coloured by GMM clusters.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 
 # run GMM clustering on the data
-gmm_results <- fit_GMM(df)
+gmm_results <- fit_GMM(if_data)
 
 # plot t-SNE
 plot_GMM_clusters(gmm_results, seed = 42)

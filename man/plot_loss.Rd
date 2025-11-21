@@ -77,7 +77,7 @@ Default is TRUE. This can be changed to FALSE if the user wishes to handle
 missing values on their own.}
 }
 \value{
-Returns NULL. Generates BIC and/or ICL plots as specified by user.
+Returns \code{NULL}. Generates BIC and/or ICL plots as specified by user.
 }
 \description{
 Plot the BIC value (Bayesian Information Criterion) the ICL value (Integrated
@@ -95,10 +95,10 @@ zero-inflation.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 
 # plot BIC and ICL values for 1 to 10 clusters
-plot_loss(df)
+plot_loss(if_data)
 
 }
 \references{

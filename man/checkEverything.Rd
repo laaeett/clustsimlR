@@ -60,24 +60,24 @@ Zero-inflated genes and cells will then be removed unless specified not to.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib
+dframe <- dasatinib
 
 # change some of the data to zero
-df_zero_inflated <- data.frame(df)
-df_zero_inflated[,2:4] <- 0
-checkEverything(df_zero_inflated)
-head(df_zero_inflated)
+dframe_zero_inflated <- data.frame(dframe)
+dframe_zero_inflated[,2:4] <- 0
+checkEverything(dframe_zero_inflated)
+head(dframe_zero_inflated)
 
 # change one of the values to NA
-df_one_NA <- data.frame(df)
-df_one_NA[1,2] <- NA
-checkEverything(df_one_NA)
-df_one_NA[1,2]
+dframe_one_NA <- data.frame(dframe)
+dframe_one_NA[1,2] <- NA
+checkEverything(dframe_one_NA)
+dframe_one_NA[1,2]
 
 #change one of the values to NaN
-df_one_NaN <- data.frame(df)
-df_one_NaN[1,2] <- 1/0
-checkEverything(df_one_NaN)
-df_one_NaN[1,2]
+dframe_one_NaN <- data.frame(dframe)
+dframe_one_NaN[1,2] <- 1/0
+checkEverything(dframe_one_NaN)
+dframe_one_NaN[1,2]
 
 }

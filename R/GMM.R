@@ -39,7 +39,7 @@
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # run GMM clustering on the data
 #' gmm_results <- fit_GMM(if_data)
@@ -91,17 +91,17 @@ fit_GMM <- function(data,
                  stop("Stopping function due to unhandled missing data.\n")
              })
 
-    if(!is.numeric(as.matrix(data))) {
+    if ( !is.numeric(as.matrix(data))) {
         stop("Data frame contains non-numeric values. Please use a subset
              of the data frame with only numeric values.\n")
     }
 
     # if seed provided, set seed
-    if(!(is.null(seed))) {
+    if ( !(is.null(seed))) {
         set.seed(seed)
     }
 
-    if(is.null(num_clust)) {
+    if (is.null(num_clust)) {
         num_clust <- ncol(data) / 2
     }
 
@@ -138,7 +138,7 @@ fit_GMM <- function(data,
 #' TRUE.
 #' @param plot_icl A logical indicating whether to plot ICL values. Default is
 #' TRUE.
-#' @returns Returns NULL. Generates BIC and/or ICL plots as specified by user.
+#' @returns Returns `NULL`. Generates BIC and/or ICL plots as specified by user.
 #'
 #' @importFrom mclust mclustBIC mclustICL
 #' @examples
@@ -147,7 +147,7 @@ fit_GMM <- function(data,
 #' if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # plot BIC and ICL values for 1 to 10 clusters
-#' plot_loss()
+#' plot_loss(if_data)
 #'
 #' @references
 #'
@@ -200,23 +200,23 @@ plot_loss <- function(data,
                  stop("Stopping function due to unhandled missing data.\n")
              })
 
-    if(!is.numeric(as.matrix(data))) {
+    if ( !is.numeric(as.matrix(data))) {
         stop("Data frame contains non-numeric values. Please use a subset
              of the data frame with only numeric values.\n")
     }
 
     # won't break the function, but really just renders it useless if both FALSE
-    if(!(plot_bic || plot_icl)) {
+    if ( !(plot_bic || plot_icl)) {
         message("At least one of plot_bic or plot_icl should be TRUE.\n")
         return()
     }
 
     # if seed provided, set seed
-    if(!(is.null(seed))) {
+    if( !(is.null(seed))) {
         set.seed(seed)
     }
 
-    if(plot_bic) {
+    if (plot_bic) {
         bic <- mclust::mclustBIC(data,
                                  G = num_clust,
                                  modelNames = modelNames,
@@ -224,13 +224,15 @@ plot_loss <- function(data,
         plot(bic)
     }
 
-    if(plot_icl) {
+    if (plot_icl) {
         icl <- mclust::mclustICL(data,
                                  G = num_clust,
                                  modelNames = modelNames,
                                  verbose = inform_progress)
         plot(icl)
     }
+
+    return(invisible(NULL))
 }
 
 #' Plot a t-SNE visualisation for GMM clusters
@@ -257,7 +259,7 @@ plot_loss <- function(data,
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 #'
 #' # run GMM clustering on the data
 #' gmm_results <- fit_GMM(if_data)
@@ -283,22 +285,21 @@ plot_GMM_clusters <- function(gmm_clustering,
                               seed = NULL,
                               size = 5) {
 
-    if(!(is.null(seed))){
+    if ( !(is.null(seed))){
         set.seed(seed)
     }
 
     X <- gmm_clustering$data
     tsne_data <- Rtsne::Rtsne(X, pca = FALSE)$Y
     clusters <- gmm_clustering$classification
-    tsne_df <- data.frame(tsne1 = tsne_data[,1],
-                          tsne2 = tsne_data[,2],
+    tsne_df <- data.frame(tsne1 = tsne_data[ , 1],
+                          tsne2 = tsne_data[ , 2],
                           cluster = clusters)
 
     tsne_plot <- ggplot2::ggplot(tsne_df) +
         ggplot2::geom_point(size = size, ggplot2::aes(x = tsne1,
                                          y = tsne2,
-                                         color = as.factor(cluster)),
-                            ) +
+                                         color = as.factor(cluster))) +
         ggplot2::labs(title = "TSNE plot of GMM clusters",
                       x = "TSNE1",
                       y = "TSNE2",
@@ -309,4 +310,4 @@ plot_GMM_clusters <- function(gmm_clustering,
     return(tsne_plot)
 }
 
-
+# [END]

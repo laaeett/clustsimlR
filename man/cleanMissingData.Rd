@@ -21,22 +21,22 @@ expression.
 \dontrun{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib
+dframe <- dasatinib
 
 # check for missing values
-checkMissingData(df)
+checkMissingData(dframe)
 
 # change one of the values to NA
-df_one_NA <- data.frame(df)
-df_one_NA[1,2] <- NA
-df_NA_cleaned <- cleanMissingData(df_one_NA)
-checkMissingData(df_NA_cleaned)
+dframe_one_NA <- data.frame(dframe)
+dframe_one_NA[1,2] <- NA
+dframe_NA_cleaned <- cleanMissingData(dframe_one_NA)
+checkMissingData(dframe_NA_cleaned)
 
 #change one of the values to NaN
-df_one_NaN <- data.frame(df)
-df_one_NaN[1,2] <- 1/0
-df_NaN_cleaned <- cleanMissingData(df_one_NaN)
-checkMissingData(df_NaN_cleaned)
-checkMissingData(df_one_NaN)
+dframe_one_NaN <- data.frame(dframe)
+dframe_one_NaN[1,2] <- 1/0
+dframe_NaN_cleaned <- cleanMissingData(dframe_one_NaN)
+checkMissingData(dframe_NaN_cleaned)
+checkMissingData(dframe_one_NaN)
 }
 }

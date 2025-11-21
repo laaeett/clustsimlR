@@ -86,10 +86,10 @@ of noise and zero-inflation.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+if_data <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
 
 # run GMM clustering on the data
-gmm_results <- fit_GMM(df)
+gmm_results <- fit_GMM(if_data)
 
 # access a summary of the results
 summary(gmm_results)

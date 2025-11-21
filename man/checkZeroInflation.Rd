@@ -30,15 +30,15 @@ function ignores NA or NaN values.
 \dontrun{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib
+dframe <- dasatinib
 
 # check for zero-inflation with default threshold of 0.5
-checkZeroInflation(df)
+checkZeroInflation(dframe)
 
 # change some of the data to zero
-df_zero_inflated <- data.frame(df)
-df_zero_inflated[, 2:4] <- 0
-checkZeroInflation(df_zero_inflated)
+dframe_zero_inflated <- data.frame(dframe)
+dframe_zero_inflated[, 2:4] <- 0
+checkZeroInflation(dframe_zero_inflated)
 }
 
 }

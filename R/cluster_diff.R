@@ -52,7 +52,7 @@ calculate_dist <- function(covA, covB) {
     }
 
     # must be real
-    if(is.complex(covA) || is.complex(covB)) {
+    if (is.complex(covA) || is.complex(covB)) {
         stop("Matrices must only have real numbers. \n")
     }
 
@@ -66,7 +66,7 @@ calculate_dist <- function(covA, covB) {
         stop("Matrices must be positive definite. \n")
     }
 
-    inverseA <- solve(covA)
+    inverse_A <- solve(covA)
     sqrt_inv_A <- expm::sqrtm(inverse_A)
     sqrt_inv_AxB <- sqrt_inv_A %*% covB
 
@@ -98,15 +98,16 @@ calculate_dist <- function(covA, covB) {
 #'  Förstner & Moonen, 2003.
 #'
 #' @importFrom pheatmap pheatmap
+#' @importFrom grid grid.text
 #'
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
-#' df_PCA <- PCA(df, scree_plot = FALSE, pc_heatmap = FALSE)$scores
+#' dframe <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
+#' dframe_PCA <- PCA(dframe, scree_plot = FALSE, pc_heatmap = FALSE)$scores
 #'
 #' # run GMM clustering on the data after PCA
-#' gmm_results <- fit_GMM(df_PCA, num_clust = 10)
+#' gmm_results <- fit_GMM(dframe_PCA, num_clust = 10)
 #'
 #' # compute inter-cluster distances and plot heatmap
 #' intercluster_dist(gmm_results)
@@ -125,33 +126,33 @@ intercluster_dist <- function(gmm_clustering,
     n_clust <- gmm_clustering$G
     covs <- gmm_clustering$parameters$variance$sigma
     distance_matrix <- matrix(nrow = n_clust, ncol = n_clust,
-                              dimnames = list(1:n_clust, 1:n_clust))
+                              dimnames = list(seq(1, n_clust), seq(1, n_clust)))
 
-    for (i in 1:n_clust) {
-        for (j in 1:n_clust) {
+    for (i in seq(1, n_clust)) {
+        for (j in seq(1, n_clust)) {
             if (i == j) {
-                distance_matrix[i,j] <- 0
-            } else if (!is.na(distance_matrix[j,i])) {
-                distance_matrix[i,j] <- distance_matrix[j,i]
+                distance_matrix[i, j] <- 0
+            } else if ( !is.na(distance_matrix[j, i])) {
+                distance_matrix[i, j] <- distance_matrix[j, i]
             } else {
-                distance_matrix[i,j] <- calculate_dist(covs[ ,,i], covs[ ,,j])
+                distance_matrix[i, j] <- calculate_dist(covs[ ,,i], covs[ ,,j])
             }
         }
     }
 
     if (plot) {
-        pheatmap::pheatmap(distance_matrix,
-                           cluster_rows = FALSE,
-                           cluster_cols = FALSE)
+        heatmap <- pheatmap::pheatmap(distance_matrix,
+                                      cluster_rows = FALSE,
+                                      cluster_cols = FALSE,
+                                      cellwidth = 45,
+                                      cellheight = 45,
+                                      main = "Inter-cluster distance")
+        grid::grid.text("Cluster",
+                        y=0.05,
+                        x=0.5)
     }
 
     return(distance_matrix)
 }
 
-
-
-
-
-
-
-
+# [END]

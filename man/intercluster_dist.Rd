@@ -28,11 +28,11 @@ computed based on the metric described by Förstner & Moonen, 2003.
 \examples{
 # load dasatinib dataset
 data(dasatinib)
-df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
-df_PCA <- PCA(df, scree_plot = FALSE, pc_heatmap = FALSE)$scores
+dframe <- dasatinib[ , -c(1,2)]  # remove non-numeric and categorical cols
+dframe_PCA <- PCA(dframe, scree_plot = FALSE, pc_heatmap = FALSE)$scores
 
 # run GMM clustering on the data after PCA
-gmm_results <- fit_GMM(df_PCA, num_clust = 10)
+gmm_results <- fit_GMM(dframe_PCA, num_clust = 10)
 
 # compute inter-cluster distances and plot heatmap
 intercluster_dist(gmm_results)

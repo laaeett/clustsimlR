@@ -24,8 +24,8 @@
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
-#' pca_results <- PCA(df)
+#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' pca_results <- PCA(if_data)
 #'
 #' # access first 5 cells and their scores for each PC
 #' pca_results$scores[1:5, ]
@@ -65,19 +65,20 @@ PCA <- function(data,
                  stop("Stopping function due to unhandled missing data.\n")
              })
 
-    if(!is.numeric(as.matrix(data))) {
+    if ( !is.numeric(as.matrix(data))) {
         stop("Data frame contains non-numeric values. Please use a subset
              of the data frame with only numeric values.\n")
     }
 
     pca_data <- stats::princomp(x = data, scores = TRUE)
 
-    if(scree_plot) {
+    if (scree_plot) {
         stats::screeplot(x = pca_data,
                          type = "lines",
                          main = "Scree plot of explained variance per PC")
     }
-    if(pc_heatmap) {
+
+    if (pc_heatmap) {
         pheatmap::pheatmap(pca_data$loadings,
                            cluster_rows = FALSE,
                            cluster_cols = FALSE,
@@ -107,8 +108,8 @@ PCA <- function(data,
 #' @examples
 #' # load dasatinib dataset
 #' data(dasatinib)
-#' df <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
-#' pca_results <- PCA(df)
+#' if_data <- dasatinib[, -c(1,2)]  # remove non-numeric and categorical cols
+#' pca_results <- PCA(if_data)
 #'
 #' # access first 5 cells and their scores for each PC
 #' pca_results$scores[1:5, ]
@@ -128,24 +129,24 @@ plot_PC <- function(pca_data,
                     pci = 1,
                     pcj = 2) {
 
-    if(!(is.integer(pci) && is.integer(pcj))) {
-        if(is.numeric(pci)) {
+    if ( !(is.integer(pci) && is.integer(pcj))) {
+        if (is.numeric(pci)) {
             pci <- as.integer(pci)
         }
-        if(is.numeric(pcj)) {
+
+        if (is.numeric(pcj)) {
             pcj <- as.integer(pcj)
-        }
-        else {
+        } else {
             stop("PC indices must be integers.\n")
         }
     }
 
-    if(pci > ncol(pca_data$scores) || pcj > ncol(pca_data$scores)) {
+    if (pci > ncol(pca_data$scores) || pcj > ncol(pca_data$scores)) {
         stop("Requested principal component exceeds number of components
              in PCA results.\n")
     }
 
-    if(pci <= 0 || pcj <= 0){
+    if (pci <= 0 || pcj <= 0){
         stop("PC indices must be >= 1.\n")
     }
 
@@ -162,6 +163,4 @@ plot_PC <- function(pca_data,
 }
 
 
-
-
-
+# [END]
