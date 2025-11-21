@@ -15,16 +15,16 @@ test_that("raise error if matrices have different dimensions", {
             "Matrices must both be square, and have the same dimensions. \n")
 })
 
-test_that("raise error if matrices are not positive", {
-    matA <- matrix(c(1, -2, 3, 4), nrow = 2, ncol = 2)
-    matB <- matrix(c(1, 2, 3, 4), nrow = 2, ncol = 2)
+test_that("raise error if matrices are not positive definite", {
+    matA <- matrix(c(1, 2, 2, 1), nrow = 2, ncol = 2, byrow = TRUE)
+    matB <- matrix(c(1, 1, 1, 1), nrow = 2, ncol = 2, byrow= TRUE)
 
     testthat::expect_error(calculate_dist(matA, matB),
-                           "Matrices must be positive. \n")
+                           "Matrices must be positive definite. \n")
     testthat::expect_error(calculate_dist(matB, matA),
-                           "Matrices must be positive. \n")
+                           "Matrices must be positive definite. \n")
     testthat::expect_error(calculate_dist(matA, matA),
-                           "Matrices must be positive. \n")
+                           "Matrices must be positive definite. \n")
 })
 
 test_that("raise error if matrices have complex numbers", {
@@ -38,6 +38,3 @@ test_that("raise error if matrices have complex numbers", {
     testthat::expect_error(calculate_dist(matA, matA),
                            "Matrices must only have real numbers. \n")
 })
-
-
-#TODO: add more tests?
