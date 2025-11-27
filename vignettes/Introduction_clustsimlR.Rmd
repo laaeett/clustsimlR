@@ -85,17 +85,17 @@ tail(df)
 
 ### 1. Data checking
 
-`clustsimlR` provides a function to check the data for certain 'red flags', in particular, zero-inflation and missing values. The `checkEverything` function checks the data for missing values (`NA` or `NaN`) and fixes them by imputation through the mean of the column. It also checks for zero-inflation and can fix them by removing zero-inflated genes and cells. Let us check the sample dataset using this function:
+`clustsimlR` provides a function to check the data for certain 'red flags', in particular, zero-inflation and missing values. The `check_everything` function checks the data for missing values (`NA` or `NaN`) and fixes them by imputation through the mean of the column. It also checks for zero-inflation and can fix them by removing zero-inflated genes and cells. Let us check the sample dataset using this function:
 
 ```{r}
-checkEverything(df) # returns NULL if successful
+check_everything(df) # returns NULL if successful
 ```
 
-It may seem like the code above did nothing, but this really means that the data we have had passed the checks in `checkEverything`. 
+It may seem like the code above did nothing, but this really means that the data we have had passed the checks in `check_everything`. 
 
-You can also customise the behaviour of `checkEverything` to not fix the missing values or zero-inflation, and instead throw an error (for missing values), or messages (for zero-inflation). This is useful if you would like to deal with the matter yourself.
+You can also customise the behaviour of `check_everything` to not fix the missing values or zero-inflation, and instead throw an error (for missing values), or messages (for zero-inflation). This is useful if you would like to deal with the matter yourself.
 
-Additionally, each function in this package that works on the data itself (and not a 'processed' version of the data like PCA scores) includes a call to `checkEverything`. This is to ensure the data is well-formatted for downstream analyses, to minimise problems that may pop up down the road.
+Additionally, each function in this package that works on the data itself (and not a 'processed' version of the data like PCA scores) includes a call to `check_everything`. This is to ensure the data is well-formatted for downstream analyses, to minimise problems that may pop up down the road.
 
 
 ### 2. PCA

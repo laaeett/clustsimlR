@@ -31,9 +31,9 @@ test_that("data passes zero-inflation check after cleaning", {
     fixed_NA <- clustsimlR:::clean_zero_inflation(inflated_df_NA)
     fixed_NaN <- clustsimlR:::clean_zero_inflation(inflated_df_NaN)
 
-    testthat::expect_false(clustsimlR:::checkZeroInflation(fixed))
-    testthat::expect_false(clustsimlR:::checkZeroInflation(fixed_NA))
-    testthat::expect_false(clustsimlR:::checkZeroInflation(fixed_NaN))
+    testthat::expect_false(clustsimlR:::check_zero_inflation(fixed))
+    testthat::expect_false(clustsimlR:::check_zero_inflation(fixed_NA))
+    testthat::expect_false(clustsimlR:::check_zero_inflation(fixed_NaN))
 
 })
 

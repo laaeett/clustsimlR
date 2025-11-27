@@ -82,7 +82,8 @@ PCA <- function(data,
         pheatmap::pheatmap(pca_data$loadings,
                            cluster_rows = FALSE,
                            cluster_cols = FALSE,
-                           angle_col = 45)
+                           angle_col = 45,
+                           main = "PC coefficients")
     }
     return(pca_data)
 }

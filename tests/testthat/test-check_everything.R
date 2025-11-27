@@ -16,8 +16,8 @@ test_that("stops when detect NaN but not fixed", {
 })
 
 
-test_that("calls cleanMissingData", {
-    mockr::local_mock(cleanMissingData = function(data) {
+test_that("calls clean_missing_data", {
+    mockr::local_mock(clean_missing_data = function(data) {
         # mock fx for testing purposes
         message("correct function call :)")
         data.frame(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9))
@@ -38,9 +38,9 @@ test_that("skips checking zero-inflation if check_zero FALSE", {
                                 message = "Data appears to be zero-inflated.\n")
 })
 
-test_that("calls checkZeroInflation", {
+test_that("calls check_zero_inflation", {
 
-    mockr::local_mock(checkZeroInflation = function(data,
+    mockr::local_mock(check_zero_inflation = function(data,
                                                     overall_zero_threshold) {
         # mock fx for testing purposes
         message("correct function call :)")
@@ -61,14 +61,14 @@ test_that("raise warning if chosen not to clean zero-inflation", {
 
 })
 
-test_that("calls cleanZeroInflation", {
+test_that("calls clean_zero_inflation", {
 
-    mockr::local_mock(checkZeroInflation = function(data,
+    mockr::local_mock(check_zero_inflation = function(data,
                                                     overall_zero_threshold) {
         TRUE
     })
 
-    mockr::local_mock(cleanZeroInflation = function(data,
+    mockr::local_mock(clean_zero_inflation = function(data,
                                                     cell_zero_threshold,
                                                     gene_zero_threshold) {
         message("correct function call :)")

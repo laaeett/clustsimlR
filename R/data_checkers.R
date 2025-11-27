@@ -290,7 +290,7 @@ check_everything <- function(data,
         }
     }
 
-    return(NULL)
+    return(invisible(NULL))
 }
 
 # [END]

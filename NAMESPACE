@@ -2,7 +2,7 @@
 
 export(PCA)
 export(calculate_dist)
-export(checkEverything)
+export(check_everything)
 export(fit_GMM)
 export(intercluster_dist)
 export(plot_GMM_clusters)
