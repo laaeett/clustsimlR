@@ -10,9 +10,11 @@
 #  <https://doi.org/10.32614/CRAN.package.shinyalert>, R package version
 #  3.1.0, <https://CRAN.R-project.org/package=shinyalert>.
 #
-# Attali, D., Sali, A. (2024). _shinycssloaders: Add Loading Animations to a 'shiny'
-#   Output While It's Recalculating_. doi:10.32614/CRAN.package.shinycssloaders
-#   <https://doi.org/10.32614/CRAN.package.shinycssloaders>, R package version 1.1.0,
+# Attali, D., Sali, A. (2024). _shinycssloaders: Add Loading Animations to a
+#   'shiny' Output While It's Recalculating_.
+#   doi:10.32614/CRAN.package.shinycssloaders
+#   <https://doi.org/10.32614/CRAN.package.shinycssloaders>,
+#   R package version 1.1.0,
 #   <https://CRAN.R-project.org/package=shinycssloaders>.
 #
 # Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie, Y.,
@@ -21,8 +23,8 @@
 #  <https://doi.org/10.32614/CRAN.package.shiny>, R package version 1.11.1,
 #  <https://CRAN.R-project.org/package=shiny>.
 #
-# Sievert, C., Cheng, J., Aden-Buie, G. (2025). _bslib: Custom 'Bootstrap' 'Sass' Themes
-#   for 'shiny' and 'rmarkdown'_. doi:10.32614/CRAN.package.bslib
+# Sievert, C., Cheng, J., Aden-Buie, G. (2025). _bslib: Custom 'Bootstrap'
+#   'Sass' Themes for 'shiny' and 'rmarkdown'_. doi:10.32614/CRAN.package.bslib
 #   <https://doi.org/10.32614/CRAN.package.bslib>, R package version 0.9.0,
 #   <https://CRAN.R-project.org/package=bslib>.
 #
@@ -35,7 +37,7 @@ library(clustsimlR)
 ui <- page_sidebar(
 
     # App theme, purely for aesthetic reasons
-    theme = bs_theme(
+    theme = bslib::bs_theme(
         version = 5,
         bootswatch = "minty"
     ),
@@ -45,8 +47,8 @@ ui <- page_sidebar(
     tags$script(HTML("
         MathJax.Hub.Config({
           tex2jax: {inlineMath: [['$$','$$']]}
-        });
-      ")),
+        });")
+    ),
 
     # App title
     title = "clustsimlR",
@@ -55,23 +57,27 @@ ui <- page_sidebar(
     sidebar = sidebar(
         width = 400,
 
-        # Input: toggle dark mode
+        # To reduce empty space at the top of the sidebar
+        div(style = "margin-top: -40px"),
 
-        tags$p("Toggle dark mode. User's system settings will be used ",
-               "by default."),
-        input_dark_mode(),
-
-        # Input an excel file, with features as cols and cells as rows
+        # Input a .csv or .rds file, with features as cols and cells as rows
         div(id = "file_input_div",
             fileInput(
                 inputId = "data_file",
-                label = "Upload your data file here (.csv or .rds format):",
+                label = paste0(
+                    "Upload your data file here. Please ensure the ",
+                    "file is a .csv or .rds file, where the first row are ",
+                    "column headers, each following row is an individual ",
+                    "cell, and each column represents a feature (e.g. ",
+                    "gene, protein etc.) "),
                 accept = c(".csv", ".rds")
             )
         ),
 
+        # To bring the file upload and button closer together
+        div(style = "margin-top: -50px"),
 
-        # Button to reset file input
+        # INput: button to reset file input
         tags$p("Click the button below to restore the default dataset. "),
         actionButton(inputId = "reset_file",
                      label = "Restore default"),
@@ -100,7 +106,12 @@ ui <- page_sidebar(
                                     " for clustering instead of PC scores"),
                      value = TRUE),
 
-        # add input for PCs to plot
+
+        # Input: toggle dark mode
+        tags$p("Toggle dark mode. User's system settings will be used ",
+               "by default."),
+        input_dark_mode(),
+
 
         # Input: Action button to submit values
         actionButton(inputId = "go_button",
@@ -190,7 +201,7 @@ ui <- page_sidebar(
            br(),
             tags$li(
              paste0("Look at the results you have by clicking the PCA, ",
-                    "GMM and Cluster distance tabs. "))
+                    "GMM and Cluster distances tabs. "))
 
          ),
 
@@ -224,7 +235,8 @@ ui <- page_sidebar(
                      tags$p(paste0("This heatmap plot shows ",
                                    "the coefficients for each ",
                                    "principal component. ",
-                                   "In a sense, this shows how much each ",
+                                   "In a sense, this gives a rough idea ",
+                                   "on how each ",
                                    "feature contributes to the variance ",
                                    "explained by each PC.")),
                      withSpinner(plotOutput("pc_heatmap", height = "600px"),
@@ -255,7 +267,7 @@ ui <- page_sidebar(
                                "original data will be used for GMM. Otherwise,",
                                " PC scores from the PCA step will be used.")),
 
-                 # TODO: center this
+
                  div(
                      withSpinner(plotOutput("tsne",
                                             height = "600px", width = "600px"),
