@@ -19,7 +19,7 @@ Description: Provides functions for single-cell data clustering analysis, with
     analysis in a manner that takes into account the finer shape of the clusters
     and how this shape differs between them.
 License: MIT + file LICENSE
-Depends: R (>= 4.3.0), Matrix
+Depends: R (>= 4.3.0)
 biocViews: Visualization,Clustering,CellBiology
 Imports: 
     pheatmap,
@@ -29,6 +29,7 @@ Imports:
     Hmisc,
     dplyr,
     magrittr,
+    Matrix,
     expm,
     grid,
     shiny,
