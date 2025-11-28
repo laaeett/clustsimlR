@@ -42,8 +42,7 @@
 #' @importFrom shiny runApp
 
 run_clustsimlR <- function() {
-    app_dir <- system.file("shiny-scripts", "clustsimlR",
-                           package = "clustsimlR")
+    app_dir <- system.file("shiny-scripts", package = "clustsimlR")
     shiny::runApp(appDir = app_dir,
                   display.mode = "normal")
     return(invisible(NULL))
