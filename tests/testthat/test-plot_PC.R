@@ -61,3 +61,5 @@ test_that("runs properly on intended data and inputs", {
     testthat::expect_no_condition(plot_PC(pca, pci = 1, pcj = 3))
 
 })
+
+# [END]

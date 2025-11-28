@@ -38,3 +38,6 @@ test_that("raise error if matrices have complex numbers", {
     testthat::expect_error(calculate_dist(matA, matA),
                            "Matrices must only have real numbers. \n")
 })
+
+# [END]
+# [END]

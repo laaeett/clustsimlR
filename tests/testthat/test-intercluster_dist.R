@@ -14,4 +14,5 @@ test_that("diagonal of distance matrix is 0", {
     testthat::expect_equal(sum(diag(dist_mat)), 0)
 })
 
-#TODO: add other tests
+
+# [END]

@@ -50,3 +50,5 @@ test_that("cleans data with whole NA columns", {
     testthat::expect_false(anyNA(fixed))
     testthat::expect_false(anyNA(fixed2))
 })
+
+# [END]

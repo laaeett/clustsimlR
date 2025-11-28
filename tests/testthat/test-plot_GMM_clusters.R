@@ -7,3 +7,6 @@ test_that("runs properly on intended data and inputs", {
     gmm <- fit_GMM(ok_df, num_clust = 3)
     testthat::expect_no_condition(plot_GMM_clusters(gmm))
 })
+
+
+# [END]

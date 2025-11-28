@@ -22,3 +22,6 @@ test_that("runs successfully with well-formatted data", {
     ok_df <- data.frame(matrix(runif(30)), nrow = 5, ncol = 6)
     testthat::expect_no_condition(fit_GMM(ok_df))
 })
+
+
+# [END]

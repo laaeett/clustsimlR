@@ -87,3 +87,4 @@ test_that("well-formatted data (no missing value, not zero-inflated) passes", {
     testthat::expect_no_condition(clustsimlR::check_everything(ok_df))
 })
 
+# [END]

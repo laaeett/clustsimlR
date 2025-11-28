@@ -1,3 +1,5 @@
+#  Sample dataset
+
 #' Single-cell Immunofluorescence Data for MCF10A cells after 24h of Dasatinib
 #' treatment, in the Nucleus
 #'
@@ -53,3 +55,5 @@
 #' https://doi.org/10.1038/ncomms9390
 #'
 'dasatinib'
+
+#  [END]

@@ -23,3 +23,5 @@ test_that("runs successfully with well-formatted data", {
     testthat::expect_no_condition(PCA(ok_df))
 })
 
+
+# [END]

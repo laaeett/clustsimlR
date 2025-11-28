@@ -48,3 +48,5 @@ test_that("works even with NaN", {
     testthat::expect_false(clustsimlR:::check_zero_inflation(ok_df_NaN))
 
 })
+
+# [END]
