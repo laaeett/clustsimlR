@@ -10,9 +10,11 @@
 #  <https://doi.org/10.32614/CRAN.package.shinyalert>, R package version
 #  3.1.0, <https://CRAN.R-project.org/package=shinyalert>.
 #
-# Attali, D., Sali, A. (2024). _shinycssloaders: Add Loading Animations to a 'shiny'
-#   Output While It's Recalculating_. doi:10.32614/CRAN.package.shinycssloaders
-#   <https://doi.org/10.32614/CRAN.package.shinycssloaders>, R package version 1.1.0,
+# Attali, D., Sali, A. (2024). _shinycssloaders: Add Loading Animations to a
+#   'shiny' Output While It's Recalculating_.
+#   doi:10.32614/CRAN.package.shinycssloaders
+#   <https://doi.org/10.32614/CRAN.package.shinycssloaders>,
+#   R package version 1.1.0,
 #   <https://CRAN.R-project.org/package=shinycssloaders>.
 #
 # Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B., Xie, Y.,
@@ -21,8 +23,8 @@
 #  <https://doi.org/10.32614/CRAN.package.shiny>, R package version 1.11.1,
 #  <https://CRAN.R-project.org/package=shiny>.
 #
-# Sievert, C., Cheng, J., Aden-Buie, G. (2025). _bslib: Custom 'Bootstrap' 'Sass' Themes
-#   for 'shiny' and 'rmarkdown'_. doi:10.32614/CRAN.package.bslib
+# Sievert, C., Cheng, J., Aden-Buie, G. (2025). _bslib: Custom 'Bootstrap'
+#   'Sass' Themes for 'shiny' and 'rmarkdown'_. doi:10.32614/CRAN.package.bslib
 #   <https://doi.org/10.32614/CRAN.package.bslib>, R package version 0.9.0,
 #   <https://CRAN.R-project.org/package=bslib>.
 #
